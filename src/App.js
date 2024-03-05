@@ -1,11 +1,13 @@
 import "./App.css";
-import Book from "./components/book";
+import Display from "./components/layout";
+// import Book from "./components/book";
 // import Display from "./components/layout";
+// import Package from "./components/deliverPackage";
 
 function App() {
   return (
     <div>
-      <Book />
+      <Display />
     </div>
   );
 }

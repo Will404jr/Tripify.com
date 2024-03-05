@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   HomeOutlined,
   DeliveredProcedureOutlined,
@@ -10,6 +10,12 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
+// Import your package component (replace with your actual path)
+import Package from "./deliverPackage";
+import Buses from "./buses/buses"; // Import your Buses component
+import LostAndFound from "./Lost and found/lostAndFound"; // Import your LostAndFound component
+import Book from "./book";
+
 const { Header, Content, Footer, Sider } = Layout;
 
 const items = [
@@ -55,6 +61,25 @@ const Display = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  // Move the state management inside the component
+  const [selectedKey, setSelectedKey] = useState("1"); // Default selected key
+
+  const handleClick = (key) => {
+    setSelectedKey(key);
+  };
+
+  const componentsMap = {
+    2: Book,
+    3: Package,
+    4: Buses,
+    5: LostAndFound,
+  }; // Map selected key to corresponding component
+
+  const renderContent = (key) => {
+    const Component = componentsMap[key]; // Get component based on key
+    return Component ? <Component /> : null; // Render component if it exists
+  };
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider
@@ -73,8 +98,10 @@ const Display = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["4"]}
+          // Use the selectedKey state directly
+          selectedKeys={[selectedKey]}
           items={items}
+          onClick={handleClick} // Pass handleClick function to Menu
         />
       </Sider>
       <Layout style={{ height: "100%" }}>
@@ -82,8 +109,8 @@ const Display = () => {
           style={{
             padding: "10px 20px",
             background: colorBgContainer,
-            display: "flex", // Added display: 'flex'
-            justifyContent: "flex-end", // Added justifyContent: 'flex-end'
+            display: "flex",
+            justifyContent: "flex-end",
             alignItems: "center",
           }}
         >
@@ -91,29 +118,20 @@ const Display = () => {
           <p>wjr46269@gmail.com</p>
         </Header>
 
-        <Content
-          style={{
-            margin: "24px 16px 0",
-          }}
-        >
+        <Content style={{ margin: "24px 16px 0" }}>
           <div
             style={{
               padding: 24,
-              minHeight: 600,
+              maxHeight: 600,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
+              overflowY: "scroll",
             }}
           >
-            content
+            {renderContent(selectedKey)}{" "}
+            {/* Call renderContent with updated state */}
           </div>
         </Content>
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
-          Tripify ©{new Date().getFullYear()} Created by Group 8
-        </Footer>
       </Layout>
     </Layout>
   );
