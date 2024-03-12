@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import {
   HomeOutlined,
   DeliveredProcedureOutlined,
@@ -10,112 +11,95 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-// Import your package component (replace with your actual path)
-import Package from "./deliverPackage";
-import Buses from "./buses/buses"; // Import your Buses component
-import LostAndFound from "./Lost and found/lostAndFound"; // Import your LostAndFound component
+import LostAndFound from "./Lost and found/lostAndFound";
 import Book from "./book";
+import Package from "./deliverPackage";
+import Home from "./home";
+// import Schedules from "./schedules";
+import Trips from "./trips";
+import Buses from "./buses/buses";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 
 const items = [
   {
-    key: "1",
+    key: "/",
     icon: <HomeOutlined />,
     label: "Home",
   },
   {
-    key: "2",
+    key: "/book",
     icon: <CarOutlined />,
     label: "Book a trip",
   },
   {
-    key: "3",
+    key: "/package",
     icon: <DeliveredProcedureOutlined />,
     label: "Deliver a package",
   },
   {
-    key: "4",
+    key: "/schedules",
     icon: <ScheduleOutlined />,
-    label: "Bus schedules",
+    label: "Buses",
   },
   {
-    key: "5",
+    key: "/lostandFound",
     icon: <InfoCircleOutlined />,
     label: "Lost and found",
   },
   {
-    key: "6",
+    key: "/trips",
     icon: <SendOutlined />,
     label: "Trips",
   },
   {
-    key: "7",
+    key: "logout",
     icon: <LogoutOutlined />,
     label: "Logout",
+    danger: true,
   },
 ];
 
 const Display = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const navigate = useNavigate();
 
-  // Move the state management inside the component
-  const [selectedKey, setSelectedKey] = useState("1"); // Default selected key
-
-  const handleClick = (key) => {
-    setSelectedKey(key);
-  };
-
-  const componentsMap = {
-    2: Book,
-    3: Package,
-    4: Buses,
-    5: LostAndFound,
-  }; // Map selected key to corresponding component
-
-  const renderContent = (key) => {
-    const Component = componentsMap[key]; // Get component based on key
-    return Component ? <Component /> : null; // Render component if it exists
+  const handleClick = ({ key }) => {
+    if (key === "logout") {
+      // Implement logout feature
+    } else {
+      navigate(key);
+    }
   };
 
   return (
     <Layout style={{ height: "100vh" }}>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-        style={{ height: "100%" }}
-      >
+      <Sider breakpoint="lg" collapsedWidth="0" style={{ height: "100%" }}>
         <h1 style={{ color: "white", margin: "20px" }}>Tripify</h1>
-        <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
           mode="inline"
-          // Use the selectedKey state directly
-          selectedKeys={[selectedKey]}
-          items={items}
-          onClick={handleClick} // Pass handleClick function to Menu
-        />
+          defaultSelectedKeys={["/"]}
+          onClick={handleClick}
+        >
+          {items.map((item) => (
+            <Menu.Item key={item.key} icon={item.icon}>
+              {item.label}
+            </Menu.Item>
+          ))}
+        </Menu>
       </Sider>
       <Layout style={{ height: "100%" }}>
         <Header
           style={{
+            backgroundColor: "white",
             padding: "10px 20px",
-            background: colorBgContainer,
             display: "flex",
             justifyContent: "flex-end",
             alignItems: "center",
           }}
         >
           <UserOutlined style={{ marginRight: "20px" }} />
-          <p>wjr46269@gmail.com</p>
+          <h3>wjr46269@gmail.com</h3>
         </Header>
 
         <Content style={{ margin: "24px 16px 0" }}>
@@ -123,17 +107,29 @@ const Display = () => {
             style={{
               padding: 24,
               maxHeight: 600,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
               overflowY: "scroll",
             }}
           >
-            {renderContent(selectedKey)}{" "}
-            {/* Call renderContent with updated state */}
+            <Content2 />
           </div>
         </Content>
       </Layout>
     </Layout>
+  );
+};
+
+const Content2 = () => {
+  return (
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/book" element={<Book />}></Route>
+        <Route path="/package" element={<Package />}></Route>
+        <Route path="/schedules" element={<Buses />}></Route>
+        <Route path="/lostandFound" element={<LostAndFound />}></Route>
+        <Route path="/trips" element={<Trips />}></Route>
+      </Routes>
+    </div>
   );
 };
 

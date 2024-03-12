@@ -10,6 +10,7 @@ import {
   Select,
   TreeSelect,
 } from "antd";
+import PrevostX345SeatLayout from "./BusSeat/seat";
 const { RangePicker } = DatePicker;
 const formItemLayout = {
   labelCol: {
@@ -143,6 +144,21 @@ const Book = () => (
       ]}
     >
       <TreeSelect />
+    </Form.Item>
+
+    <Form.Item
+      label="Select seat"
+      name="Select seat"
+      rules={[
+        {
+          required: true,
+          message: "Please choose a seat!",
+        },
+      ]}
+    >
+      <div>
+        <PrevostX345SeatLayout />
+      </div>
     </Form.Item>
 
     <Form.Item
