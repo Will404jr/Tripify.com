@@ -1,176 +1,193 @@
-import React from "react";
-import {
-  Button,
-  Cascader,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Mentions,
-  Select,
-  TreeSelect,
-} from "antd";
-import PrevostX345SeatLayout from "./BusSeat/seat";
-const { RangePicker } = DatePicker;
-const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
+import React, { useState } from "react";
+import PrevostX345SeatLayout from "./BusSeat/seat"; // Assuming seat layout component
+
+const Book = () => {
+  const [formData, setFormData] = useState({}); // State to store user input
+
+  const handleInputChange = (event) => {
+    if (event.target) {
+      setFormData({ ...formData, [event.target.name]: event.target.value });
+    }
+  };
+
+  const handleDateChange = (date) => {
+    setFormData({ ...formData, selectedDate: date });
+  };
+
+  const handleSeatSelection = (selectedSeat) => {
+    setFormData({ ...formData, selectedSeat });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Data:", formData); // Log all form data
+  };
+
+  const destinations = [
+    { value: "city1", label: "City 1" },
+    { value: "city2", label: "City 2" },
+    { value: "city3", label: "City 3" },
+  ];
+
+  const buses = [
+    {
+      value: "bus1",
+      label: "Bus 1 (Luxury)",
+      children: [
+        { value: "bus1_morning", label: "Morning Departure" },
+        { value: "bus1_evening", label: "Evening Departure" },
+      ],
     },
-    sm: {
-      span: 6,
+    {
+      value: "bus2",
+      label: "Bus 2 (Standard)",
+      children: [{ value: "bus2_daytime", label: "Daytime Departure" }],
     },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 14,
-    },
-  },
-};
-const Book = () => (
-  <Form
-    {...formItemLayout}
-    variant="filled"
-    style={{
-      maxWidth: 600,
-    }}
-  >
-    <Form.Item
-      label="FullNames"
-      name="FullNames"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <Input />
-    </Form.Item>
+  ];
 
-    <Form.Item
-      label="TellNumber"
-      name="TellNumber"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <InputNumber
-        style={{
-          width: "100%",
-        }}
-      />
-    </Form.Item>
+  const shippingTimes = [
+    { value: "time1", label: "9:00 AM" },
+    { value: "time2", label: "12:00 PM" },
+    { value: "time3", label: "3:00 PM" },
+  ];
 
-    {/* <Form.Item
-      label="TextArea"
-      name="TextArea"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
+  return (
+    <form
+      className="container-fluid"
+      style={{ maxWidth: "600px" }}
+      onSubmit={handleSubmit}
     >
-      <Input.TextArea />
-    </Form.Item>
-
-    <Form.Item
-      label="Mentions"
-      name="Mentions"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <Mentions />
-    </Form.Item> */}
-
-    <Form.Item
-      label="Destination"
-      name="Destination"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <Select />
-    </Form.Item>
-
-    <Form.Item
-      label="Choose a bus"
-      name="Choose a bus"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <Cascader />
-    </Form.Item>
-
-    <Form.Item
-      label="Select travel date"
-      name="Select travel date"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <DatePicker />
-    </Form.Item>
-
-    <Form.Item
-      label="Choose departure time"
-      name="Choose departure time"
-      rules={[
-        {
-          required: true,
-          message: "Please input!",
-        },
-      ]}
-    >
-      <TreeSelect />
-    </Form.Item>
-
-    <Form.Item
-      label="Select seat"
-      name="Select seat"
-      rules={[
-        {
-          required: true,
-          message: "Please choose a seat!",
-        },
-      ]}
-    >
-      <div>
-        <PrevostX345SeatLayout />
+      <div className="row mb-3">
+        <label htmlFor="fullNames" className="col-sm-2 col-form-label">
+          Full Names
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="text"
+            className="form-control"
+            id="fullNames"
+            name="FullNames"
+            onChange={handleInputChange}
+            required
+          />
+        </div>
       </div>
-    </Form.Item>
 
-    <Form.Item
-      wrapperCol={{
-        offset: 6,
-        span: 16,
-      }}
-    >
-      <Button type="primary" htmlType="submit">
-        Proceed to payment
-      </Button>
-    </Form.Item>
-  </Form>
-);
+      <div className="row mb-3">
+        <label htmlFor="tellNumber" className="col-sm-2 col-form-label">
+          Tell Number
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="number"
+            className="form-control"
+            id="tellNumber"
+            name="TellNumber"
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <label htmlFor="destination" className="col-sm-2 col-form-label">
+          Destination
+        </label>
+        <div className="col-sm-10">
+          <select
+            className="form-select"
+            id="destination"
+            name="destination"
+            onChange={handleInputChange}
+            required
+          >
+            {destinations.map((destination) => (
+              <option key={destination.value} value={destination.value}>
+                {destination.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <label htmlFor="chosenBus" className="col-sm-2 col-form-label">
+          Choose a bus
+        </label>
+        <div className="col-sm-10">
+          <select
+            className="form-select"
+            id="chosenBus"
+            name="chosenBus"
+            onChange={handleInputChange}
+          >
+            <option value="">Select Bus</option>
+            {buses.map((bus) => (
+              <option key={bus.value} value={bus.value}>
+                {bus.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <label htmlFor="selectedDate" className="col-sm-2 col-form-label">
+          Select travel date
+        </label>
+        <div className="col-sm-10">
+          <input
+            type="date"
+            className="form-control"
+            id="selectedDate"
+            name="selectedDate"
+            onChange={handleDateChange}
+            required
+          />
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <label htmlFor="shippingTime" className="col-sm-2 col-form-label">
+          Choose departure time
+        </label>
+        <div className="col-sm-10">
+          <select
+            className="form-select"
+            id="shippingTime"
+            name="shippingTime"
+            onChange={handleInputChange}
+            required
+          >
+            <option value="">Select Time</option>
+            {shippingTimes.map((time) => (
+              <option key={time.value} value={time.value}>
+                {time.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <label htmlFor="selectedSeat" className="col-sm-2 col-form-label">
+          Select seat
+        </label>
+        <div className="col-sm-10">
+          <div>
+            <PrevostX345SeatLayout onSeatSelection={handleSeatSelection} />
+          </div>
+        </div>
+      </div>
+
+      <div className="row mb-3">
+        <div className="col-sm-10 offset-sm-2">
+          <button type="submit" className="btn btn-primary">
+            Proceed to payment
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+};
 export default Book;

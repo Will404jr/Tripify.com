@@ -15,13 +15,13 @@ const Home = () => {
         Welcome to <i>Tripify</i>
       </h1>
       <img
-        src={require("./images/bus1.png")}
+        src={require("./images/logo.png")}
         alt="bus"
         style={{
           maxWidth: "100%",
-          maxHeight: "100%",
+          maxHeight: "500px",
           borderRadius: "8px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          // boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       />
     </div>

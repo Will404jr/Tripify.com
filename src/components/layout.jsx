@@ -8,6 +8,7 @@ import {
   InfoCircleOutlined,
   SendOutlined,
   CarOutlined,
+  ArrowsAltOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
@@ -18,6 +19,7 @@ import Home from "./home";
 // import Schedules from "./schedules";
 import Trips from "./trips";
 import Buses from "./buses/buses";
+import Ongoing from "./ongoingTrip";
 
 const { Header, Content, Sider } = Layout;
 
@@ -53,6 +55,11 @@ const items = [
     label: "Trips",
   },
   {
+    key: "/ongoing",
+    icon: <ArrowsAltOutlined />,
+    label: "Ongoing trip",
+  },
+  {
     key: "logout",
     icon: <LogoutOutlined />,
     label: "Logout",
@@ -62,8 +69,10 @@ const items = [
 
 const Display = () => {
   const navigate = useNavigate();
+  const [selectedKey, setSelectedKey] = React.useState("/");
 
   const handleClick = ({ key }) => {
+    setSelectedKey(key);
     if (key === "logout") {
       // Implement logout feature
     } else {
@@ -74,7 +83,7 @@ const Display = () => {
   return (
     <Layout style={{ height: "100vh" }}>
       <Sider breakpoint="lg" collapsedWidth="0" style={{ height: "100%" }}>
-        <h1 style={{ color: "white", margin: "20px" }}>Tripify</h1>
+        <h3 style={{ color: "white", margin: "20px" }}>Tripify</h3>
         <Menu
           theme="dark"
           mode="inline"
@@ -94,12 +103,15 @@ const Display = () => {
             backgroundColor: "white",
             padding: "10px 20px",
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <UserOutlined style={{ marginRight: "20px" }} />
-          <h3>wjr46269@gmail.com</h3>
+          <h6>{findLabelByKey(selectedKey)}</h6>
+          <div style={{ display: "flex" }}>
+            <UserOutlined style={{ marginRight: "20px" }} />
+            <h6>wjr46269@gmail.com</h6>
+          </div>
         </Header>
 
         <Content style={{ margin: "24px 16px 0" }}>
@@ -108,6 +120,7 @@ const Display = () => {
               padding: 24,
               maxHeight: 600,
               overflowY: "scroll",
+              backgroundColor: "#eafefc",
             }}
           >
             <Content2 />
@@ -116,6 +129,11 @@ const Display = () => {
       </Layout>
     </Layout>
   );
+};
+
+const findLabelByKey = (key) => {
+  const foundItem = items.find((item) => item.key === key);
+  return foundItem ? foundItem.label : ""; // Return label or empty string
 };
 
 const Content2 = () => {
@@ -128,6 +146,7 @@ const Content2 = () => {
         <Route path="/schedules" element={<Buses />}></Route>
         <Route path="/lostandFound" element={<LostAndFound />}></Route>
         <Route path="/trips" element={<Trips />}></Route>
+        <Route path="/ongoing" element={<Ongoing />}></Route>
       </Routes>
     </div>
   );
