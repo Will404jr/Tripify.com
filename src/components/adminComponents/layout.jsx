@@ -2,24 +2,16 @@ import React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import {
   HomeOutlined,
-  DeliveredProcedureOutlined,
+  DollarOutlined,
+  EditOutlined,
   UserOutlined,
-  ScheduleOutlined,
-  InfoCircleOutlined,
-  SendOutlined,
+  GoldOutlined,
+  ReconciliationOutlined,
   CarOutlined,
-  ArrowsAltOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import LostAndFound from "./Lost and found/lostAndFound";
-import Book from "./book";
-import Package from "./deliverPackage";
-import Home from "./home";
-// import Schedules from "./schedules";
-import Trips from "./trips";
-import Buses from "./buses/buses";
-import Ongoing from "./ongoingTrip";
+import Home from "../home";
 
 const { Header, Content, Sider } = Layout;
 
@@ -30,34 +22,29 @@ const items = [
     label: "Home",
   },
   {
-    key: "/book",
+    key: "/bookings",
     icon: <CarOutlined />,
-    label: "Book a trip",
+    label: "Bookings",
   },
   {
-    key: "/package",
-    icon: <DeliveredProcedureOutlined />,
-    label: "Deliver a package",
+    key: "/packages",
+    icon: <GoldOutlined />,
+    label: "Packages",
   },
   {
-    key: "/schedules",
-    icon: <ScheduleOutlined />,
-    label: "Buses",
+    key: "/finance",
+    icon: <DollarOutlined />,
+    label: "Finance",
   },
   {
-    key: "/lostandFound",
-    icon: <InfoCircleOutlined />,
-    label: "Lost and found",
+    key: "/edit",
+    icon: <EditOutlined />,
+    label: "Edit",
   },
   {
-    key: "/trips",
-    icon: <SendOutlined />,
-    label: "Trips",
-  },
-  {
-    key: "/ongoing",
-    icon: <ArrowsAltOutlined />,
-    label: "Ongoing trip",
+    key: "/track",
+    icon: <ReconciliationOutlined />,
+    label: "Track receipt",
   },
   {
     key: "logout",
@@ -110,7 +97,7 @@ const Display = () => {
           <h6>{findLabelByKey(selectedKey)}</h6>
           <div style={{ display: "flex" }}>
             <UserOutlined style={{ marginRight: "20px" }} />
-            <h6>wjr46269@gmail.com</h6>
+            <h6>GLOBAL COACHES</h6>
           </div>
         </Header>
 
@@ -141,12 +128,11 @@ const Content2 = () => {
     <div>
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/book" element={<Book />}></Route>
-        <Route path="/package" element={<Package />}></Route>
-        <Route path="/schedules" element={<Buses />}></Route>
-        <Route path="/lostandFound" element={<LostAndFound />}></Route>
-        <Route path="/trips" element={<Trips />}></Route>
-        <Route path="/ongoing" element={<Ongoing />}></Route>
+        <Route path="/bookings" element={<bookings />}></Route>
+        <Route path="/packages" element={<packages />}></Route>
+        <Route path="/finance" element={<finance />}></Route>
+        <Route path="/edit" element={<edit />}></Route>
+        <Route path="/track" element={<track />}></Route>
       </Routes>
     </div>
   );

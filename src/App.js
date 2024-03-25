@@ -1,5 +1,6 @@
 import "./App.css";
-import Display from "./components/layout";
+import Display from "./components/adminComponents/layout";
+import Register from "./components/adminComponents/registerBus";
 // import Book from "./components/book";
 // import Display from "./components/layout";
 // import Package from "./components/deliverPackage";
@@ -7,7 +8,7 @@ import Display from "./components/layout";
 function App() {
   return (
     <div>
-      <Display />
+      <Register />
     </div>
   );
 }
