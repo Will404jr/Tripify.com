@@ -1,6 +1,7 @@
 import "./App.css";
 import Display from "./components/adminComponents/layout";
-import Register from "./components/adminComponents/registerBus";
+import TravelForm from "./components/adminComponents/RegisterForm";
+
 // import Book from "./components/book";
 // import Display from "./components/layout";
 // import Package from "./components/deliverPackage";
@@ -8,7 +9,7 @@ import Register from "./components/adminComponents/registerBus";
 function App() {
   return (
     <div>
-      <Register />
+      <TravelForm />
     </div>
   );
 }
