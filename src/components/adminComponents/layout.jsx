@@ -5,6 +5,7 @@ import {
   DollarOutlined,
   EditOutlined,
   UserOutlined,
+  InfoCircleOutlined,
   GoldOutlined,
   ReconciliationOutlined,
   CarOutlined,
@@ -12,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import Home from "../home";
+import LostAndFound from "./lostAndFound";
 
 const { Header, Content, Sider } = Layout;
 
@@ -45,6 +47,11 @@ const items = [
     key: "/track",
     icon: <ReconciliationOutlined />,
     label: "Track receipt",
+  },
+  {
+    key: "/lost",
+    icon: <InfoCircleOutlined />,
+    label: "Lost and found",
   },
   {
     key: "logout",
@@ -133,6 +140,7 @@ const Content2 = () => {
         <Route path="/finance" element={<finance />}></Route>
         <Route path="/edit" element={<edit />}></Route>
         <Route path="/track" element={<track />}></Route>
+        <Route path="/lost" element={<LostAndFound />}></Route>
       </Routes>
     </div>
   );

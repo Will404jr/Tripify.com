@@ -1,4 +1,5 @@
 import "./App.css";
+import ImageUpload from "./components/adminComponents/ImageUpload";
 import Display from "./components/adminComponents/layout";
 import TravelForm from "./components/adminComponents/RegisterForm";
 
@@ -9,7 +10,7 @@ import TravelForm from "./components/adminComponents/RegisterForm";
 function App() {
   return (
     <div>
-      <TravelForm />
+      <Display />
     </div>
   );
 }

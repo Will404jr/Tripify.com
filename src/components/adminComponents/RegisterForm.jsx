@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import "./RegisterForm.css";
 import ImageUpload from "./ImageUpload";
+import "./RegisterForm.css";
+import axios from "axios";
 
 const TravelForm = () => {
   const [companyName, setCompanyName] = useState("");
   const [manager, setManager] = useState("");
   const [contact, setContact] = useState("");
+  const [courrierPrice, setCourrierPrice] = useState("");
+  const [schedules, setSchedules] = useState([]);
   const [stations, setStations] = useState([
     { stationName: "", destinations: [{ name: "", price: "" }] },
   ]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleStationChange = (index, field, value) => {
     const updatedStations = [...stations];
@@ -52,24 +56,32 @@ const TravelForm = () => {
     setStations(updatedStations);
   };
 
-  // const handleRegister = () => {
-  //   console.log("Company Name:", companyName);
-  //   console.log("Manager:", manager);
-  //   console.log("Contact:", contact);
-  //   console.log("Stations and Destinations:");
-  //   console.log(stations);
-  // };
-
-  const handleRegister = () => {
-    const formData = {
-      companyName: companyName,
-      manager: manager,
-      contact: contact,
-      stations: stations,
-    };
-    console.log(formData);
+  const handleAddSchedule = () => {
+    setSchedules([...schedules, ""]); // Add an empty string to the schedules array
   };
 
+  const handleRegister = async () => {
+    const formData = {
+      company: companyName,
+      manager: manager,
+      contact: contact,
+      courrierPrice: courrierPrice,
+      schedules: schedules,
+      stations: stations,
+      images: [], // Placeholder for image URLs
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/busRegister",
+        formData
+      );
+      console.log(response.data); // Handle successful response
+      setIsSubmitted(true); // Set submitted state to true
+    } catch (error) {
+      console.error(error); // Handle error
+    }
+  };
   return (
     <div className="container">
       <h2>Company Registration Form</h2>
@@ -101,9 +113,33 @@ const TravelForm = () => {
       </label>
       <br />
       <label>
-        Upload bus images:
-        <ImageUpload />
+        Courrier Price:
+        <input
+          type="number"
+          value={courrierPrice}
+          onChange={(e) => setCourrierPrice(e.target.value)}
+        />
       </label>
+      <br />
+      {schedules.map((schedule, index) => (
+        <div key={index}>
+          <label>
+            Schedule {index + 1}:
+            <input
+              type="time"
+              value={schedule}
+              onChange={(e) => {
+                const updatedSchedules = [...schedules];
+                updatedSchedules[index] = e.target.value;
+                setSchedules(updatedSchedules);
+              }}
+            />
+          </label>
+        </div>
+      ))}
+      <button className="btn btn-primary mt-3" onClick={handleAddSchedule}>
+        Add Schedule
+      </button>
       <br />
       {stations.map((station, stationIndex) => (
         <div className="card mt-3" key={stationIndex}>
@@ -190,9 +226,14 @@ const TravelForm = () => {
       <button className="btn btn-primary mt-3" onClick={handleAddStation}>
         Add Station
       </button>
-      <button className="btn btn-success mt-3" onClick={handleRegister}>
-        Register
+      <button
+        className="btn btn-success mt-3"
+        onClick={handleRegister}
+        disabled={isSubmitted}
+      >
+        {isSubmitted ? "Registration Successful" : "Register"}
       </button>
+      {isSubmitted && <ImageUpload companyName={companyName} />}
     </div>
   );
 };
