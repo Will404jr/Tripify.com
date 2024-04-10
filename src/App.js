@@ -1,7 +1,9 @@
 import "./App.css";
-import ImageUpload from "./components/adminComponents/ImageUpload";
 import Display from "./components/adminComponents/layout";
 import TravelForm from "./components/adminComponents/RegisterForm";
+import LostAndFound from "./components/userComponents/Lost and found/lostAndFound";
+import LostItems from "./components/userComponents/displayLostItems";
+import BusCompanyDetails from "./components/userComponents/buses/bus";
 
 // import Book from "./components/book";
 // import Display from "./components/layout";

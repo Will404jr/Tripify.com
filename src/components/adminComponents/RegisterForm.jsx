@@ -9,6 +9,7 @@ const TravelForm = () => {
   const [contact, setContact] = useState("");
   const [courrierPrice, setCourrierPrice] = useState("");
   const [schedules, setSchedules] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
   const [stations, setStations] = useState([
     { stationName: "", destinations: [{ name: "", price: "" }] },
   ]);
@@ -60,7 +61,28 @@ const TravelForm = () => {
     setSchedules([...schedules, ""]); // Add an empty string to the schedules array
   };
 
+  const handleImageChange = (event) => {
+    setSelectedImages(Array.from(event.target.files));
+  };
+
   const handleRegister = async () => {
+    const imageUrls = [];
+    for (const image of selectedImages) {
+      const imageFormData = new FormData();
+      imageFormData.append("file", image);
+      imageFormData.append("upload_preset", "bbifnh5x");
+
+      try {
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/dzuu1kacl/image/upload",
+          imageFormData
+        );
+        imageUrls.push(response.data.secure_url);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+
     const formData = {
       company: companyName,
       manager: manager,
@@ -68,7 +90,7 @@ const TravelForm = () => {
       courrierPrice: courrierPrice,
       schedules: schedules,
       stations: stations,
-      images: [], // Placeholder for image URLs
+      images: imageUrls,
     };
 
     try {
@@ -120,6 +142,15 @@ const TravelForm = () => {
           onChange={(e) => setCourrierPrice(e.target.value)}
         />
       </label>
+      <br />
+      <label htmlFor="images">Images (Optional):</label>
+      <input
+        type="file"
+        id="images"
+        name="images"
+        multiple
+        onChange={handleImageChange}
+      />
       <br />
       {schedules.map((schedule, index) => (
         <div key={index}>

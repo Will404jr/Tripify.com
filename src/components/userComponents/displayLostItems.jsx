@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./lostAndFound.css"; // Import your external CSS file
+import "./LostItems.css"; // Import your external CSS file
 
 const LostItems = () => {
   const [lostItems, setLostItems] = useState([]);

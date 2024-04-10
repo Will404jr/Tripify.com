@@ -13,6 +13,7 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import Home from "../home";
+import packages from "./packages";
 import LostAndFound from "./lostAndFound";
 
 const { Header, Content, Sider } = Layout;

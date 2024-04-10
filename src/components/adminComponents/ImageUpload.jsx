@@ -44,7 +44,7 @@ const ImageUpload = ({ companyName }) => {
 
   return (
     <div className={styles.imageUploadContainer}>
-      <h1>{companyName} - Upload Images</h1> {/* Display company name */}
+      <h5>{companyName} - Upload Images</h5> {/* Display company name */}
       <input
         type="file"
         multiple

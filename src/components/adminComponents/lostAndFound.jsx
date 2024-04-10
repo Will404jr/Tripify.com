@@ -1,34 +1,47 @@
 import React, { useState } from "react";
-import Axios from "axios";
-import styles from "./ImageUpload.module.css"; // Import styles
+import axios from "axios";
 
-const LostAndFound = ({ companyName }) => {
+const LostAndFound = () => {
   const [description, setDescription] = useState("");
   const [station, setStation] = useState("");
   const [contact, setContact] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const uploadData = async () => {
-    if (!description || !station || !contact) {
-      console.error("Please fill in all fields.");
-      return;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case "description":
+        setDescription(value);
+        break;
+      case "station":
+        setStation(value);
+        break;
+      case "contact":
+        setContact(value);
+        break;
+      default:
+        break;
     }
+  };
 
-    if (selectedImages.length === 0) {
-      console.error("Please select at least one image.");
-      return;
-    }
+  const handleImageChange = (event) => {
+    setSelectedImages(Array.from(event.target.files)); // Convert FileList to an array
+  };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Handle image uploads to Cloudinary
     const imageUrls = [];
     for (const image of selectedImages) {
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", "bbifnh5x");
+      const imageFormData = new FormData();
+      imageFormData.append("file", image);
+      imageFormData.append("upload_preset", "bbifnh5x");
 
       try {
-        const response = await Axios.post(
+        const response = await axios.post(
           "https://api.cloudinary.com/v1_1/dzuu1kacl/image/upload",
-          formData
+          imageFormData
         );
         imageUrls.push(response.data.secure_url);
       } catch (error) {
@@ -36,68 +49,68 @@ const LostAndFound = ({ companyName }) => {
       }
     }
 
-    // Send data to server after all uploads are complete
-    if (imageUrls.length > 0) {
-      try {
-        await Axios.post("http://localhost:5000/api/lost", {
-          description,
-          station,
-          contact,
-          images: imageUrls,
-        });
-        console.log("Data sent successfully!");
-        // Clear form fields after successful submission
-        setDescription("");
-        setStation("");
-        setContact("");
-        setSelectedImages([]);
-      } catch (error) {
-        console.error("Error sending data:", error);
-      }
+    // Construct a single data object with all form values
+    const dataObject = {
+      description: description,
+      station: station,
+      contact: contact,
+      images: imageUrls, // Assuming imageUrls is an array of image URLs
+    };
+
+    console.log("Data object:", dataObject);
+
+    // Send the data object to the server
+    try {
+      await axios.post("http://localhost:5000/api/lost", dataObject, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Data sent successfully!");
+    } catch (error) {
+      console.error("Error sending data:", error);
     }
   };
 
   return (
-    <div className={styles.imageUploadContainer}>
-      <label>
-        Description:
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Station:
-        <input
-          type="text"
-          value={station}
-          onChange={(e) => setStation(e.target.value)}
-        />
-      </label>
-      <br />
-      <label>
-        Contact:
-        <input
-          type="text"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-        />
-      </label>
-      <br />
+    <form onSubmit={handleSubmit}>
+      <label htmlFor="description">Description:</label>
+      <input
+        type="text"
+        id="description"
+        name="description"
+        value={description}
+        onChange={handleInputChange}
+        required
+      />
+      <label htmlFor="station">Station:</label>
+      <input
+        type="text"
+        id="station"
+        name="station"
+        value={station}
+        onChange={handleInputChange}
+        required
+      />
+      <label htmlFor="contact">Contact:</label>
+      <input
+        type="text"
+        id="contact"
+        name="contact"
+        value={contact}
+        onChange={handleInputChange}
+        required
+      />
+      <label htmlFor="images">Images (Optional):</label>
       <input
         type="file"
+        id="images"
+        name="images"
         multiple
-        className={styles.imageUploadInput}
-        onChange={(event) => {
-          setSelectedImages([...selectedImages, ...event.target.files]);
-        }}
+        onChange={handleImageChange}
       />
-      <button className={styles.imageUploadButton} onClick={uploadData}>
-        Upload Data
-      </button>
-    </div>
+      <button type="submit">Submit Lost Item</button>
+    </form>
   );
 };
 

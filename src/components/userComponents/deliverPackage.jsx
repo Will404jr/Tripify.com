@@ -112,7 +112,7 @@ const Package = () => {
         </div>
       </div>
 
-      <div className="row mb-3">
+      {/* <div className="row mb-3">
         <label htmlFor="packageFile" className="col-sm-2 col-form-label">
           Package File
         </label>
@@ -126,7 +126,7 @@ const Package = () => {
             accept=".pdf,.docx,.jpg,.jpeg,.png" // Specify allowed file types
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="row mb-3">
         <label htmlFor="destination" className="col-sm-2 col-form-label">

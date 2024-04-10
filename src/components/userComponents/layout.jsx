@@ -12,7 +12,7 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import LostAndFound from "./Lost and found/lostAndFound";
+
 import Book from "./book";
 import Package from "./deliverPackage";
 import Home from "../home";
@@ -20,6 +20,7 @@ import Home from "../home";
 import Trips from "./trips";
 import Buses from "./buses/buses";
 import Ongoing from "./ongoingTrip";
+import LostAndFound from "./Lost and found/lostAndFound";
 
 const { Header, Content, Sider } = Layout;
 
