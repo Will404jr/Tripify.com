@@ -1,193 +1,173 @@
-import React, { useState } from "react";
-import PrevostX345SeatLayout from "./BusSeat/seat"; // Assuming seat layout component
+import React, { useState, useEffect } from "react";
 
 const Book = () => {
-  const [formData, setFormData] = useState({}); // State to store user input
+  const [buses, setBuses] = useState([]);
+  const [filteredBuses, setFilteredBuses] = useState([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    phoneNumber: "",
+    destination: "",
+    busCompany: "",
+    station: "",
+    date: "",
+    schedule: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
+  const [ticketPrice, setTicketPrice] = useState(0);
 
-  const handleInputChange = (event) => {
-    if (event.target) {
-      setFormData({ ...formData, [event.target.name]: event.target.value });
-    }
-  };
+  useEffect(() => {
+    // Fetch the bus data from the server
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/buses");
+        const data = await response.json();
+        setBuses(data);
+      } catch (error) {
+        console.error("Error fetching bus data:", error);
+      }
+    };
 
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, selectedDate: date });
-  };
+    fetchData();
+  }, []);
 
-  const handleSeatSelection = (selectedSeat) => {
-    setFormData({ ...formData, selectedSeat });
+  useEffect(() => {
+    // Filter buses based on the selected destination
+    const filteredBuses = buses.filter((bus) =>
+      bus.stations.some((station) =>
+        station.destinations.some((dest) => dest.name === formData.destination)
+      )
+    );
+    setFilteredBuses(filteredBuses);
+  }, [formData.destination, buses]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data:", formData); // Log all form data
+    console.log(formData);
+    setSubmitted(true);
+    setTicketPrice(getTicketPrice()); // Calculate ticket price after form submission
   };
 
-  const destinations = [
-    { value: "city1", label: "City 1" },
-    { value: "city2", label: "City 2" },
-    { value: "city3", label: "City 3" },
-  ];
+  const getTicketPrice = () => {
+    const selectedBus = filteredBuses.find(
+      (bus) => bus.company === formData.busCompany
+    );
+    const selectedStation = selectedBus?.stations.find(
+      (station) => station.stationName === formData.station
+    );
+    const selectedDestination = selectedStation?.destinations.find(
+      (dest) => dest.name === formData.destination
+    );
+    return selectedDestination ? selectedDestination.price : 0;
+  };
 
-  const buses = [
-    {
-      value: "bus1",
-      label: "Bus 1 (Luxury)",
-      children: [
-        { value: "bus1_morning", label: "Morning Departure" },
-        { value: "bus1_evening", label: "Evening Departure" },
-      ],
-    },
-    {
-      value: "bus2",
-      label: "Bus 2 (Standard)",
-      children: [{ value: "bus2_daytime", label: "Daytime Departure" }],
-    },
-  ];
+  const handleProceedToPayment = async () => {
+    try {
+      const bookingData = {
+        fullNames: formData.name,
+        tellNumber: formData.phoneNumber,
+        destination: formData.destination,
+        chosenBus: formData.busCompany,
+        selectedDate: formData.date,
+        shippingTime: formData.schedule,
+      };
 
-  const shippingTimes = [
-    { value: "time1", label: "9:00 AM" },
-    { value: "time2", label: "12:00 PM" },
-    { value: "time3", label: "3:00 PM" },
-  ];
+      const response = await fetch("http://localhost:5000/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create booking");
+      }
+
+      console.log("Booking created successfully");
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error creating booking:", error);
+    }
+  };
 
   return (
-    <form
-      className="container-fluid"
-      style={{ maxWidth: "600px" }}
-      onSubmit={handleSubmit}
-    >
-      <div className="row mb-3">
-        <label htmlFor="fullNames" className="col-sm-2 col-form-label">
-          Full Names
-        </label>
-        <div className="col-sm-10">
-          <input
-            type="text"
-            className="form-control"
-            id="fullNames"
-            name="FullNames"
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <label htmlFor="tellNumber" className="col-sm-2 col-form-label">
-          Tell Number
-        </label>
-        <div className="col-sm-10">
-          <input
-            type="number"
-            className="form-control"
-            id="tellNumber"
-            name="TellNumber"
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <label htmlFor="destination" className="col-sm-2 col-form-label">
-          Destination
-        </label>
-        <div className="col-sm-10">
-          <select
-            className="form-select"
-            id="destination"
-            name="destination"
-            onChange={handleInputChange}
-            required
-          >
-            {destinations.map((destination) => (
-              <option key={destination.value} value={destination.value}>
-                {destination.label}
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="tel"
+          name="phoneNumber"
+          placeholder="Phone Number"
+          onChange={handleChange}
+          required
+        />
+        <select name="destination" onChange={handleChange} required>
+          <option value="">Select Destination</option>
+          {buses.map((bus) =>
+            bus.stations
+              .flatMap((station) => station.destinations)
+              .map((destination) => (
+                <option key={destination._id} value={destination.name}>
+                  {destination.name}
+                </option>
+              ))
+          )}
+        </select>
+        <select
+          name="busCompany"
+          value={formData.busCompany}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Bus</option>
+          {filteredBuses.map((bus) => (
+            <option key={bus._id} value={bus.company}>
+              {bus.company}
+            </option>
+          ))}
+        </select>
+        <select name="station" onChange={handleChange} required>
+          <option value="">Select Station</option>
+          {filteredBuses
+            .flatMap((bus) => bus.stations)
+            .map((station) => (
+              <option key={station._id} value={station.stationName}>
+                {station.stationName}
               </option>
             ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <label htmlFor="chosenBus" className="col-sm-2 col-form-label">
-          Choose a bus
-        </label>
-        <div className="col-sm-10">
-          <select
-            className="form-select"
-            id="chosenBus"
-            name="chosenBus"
-            onChange={handleInputChange}
-          >
-            <option value="">Select Bus</option>
-            {buses.map((bus) => (
-              <option key={bus.value} value={bus.value}>
-                {bus.label}
+        </select>
+        <input type="date" name="date" onChange={handleChange} required />
+        <select name="schedule" onChange={handleChange} required>
+          <option value="">Select Schedule</option>
+          {filteredBuses
+            .flatMap((bus) => bus.schedules)
+            .map((schedule, index) => (
+              <option key={index} value={schedule}>
+                {schedule}
               </option>
             ))}
-          </select>
+        </select>
+        <button type="submit">Submit</button>
+      </form>
+      {submitted && (
+        <div>
+          <p>Ticket Price: ${ticketPrice}</p>
+          <button onClick={handleProceedToPayment}>Proceed to Payment</button>
         </div>
-      </div>
-
-      <div className="row mb-3">
-        <label htmlFor="selectedDate" className="col-sm-2 col-form-label">
-          Select travel date
-        </label>
-        <div className="col-sm-10">
-          <input
-            type="date"
-            className="form-control"
-            id="selectedDate"
-            name="selectedDate"
-            onChange={handleDateChange}
-            required
-          />
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <label htmlFor="shippingTime" className="col-sm-2 col-form-label">
-          Choose departure time
-        </label>
-        <div className="col-sm-10">
-          <select
-            className="form-select"
-            id="shippingTime"
-            name="shippingTime"
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Select Time</option>
-            {shippingTimes.map((time) => (
-              <option key={time.value} value={time.value}>
-                {time.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <label htmlFor="selectedSeat" className="col-sm-2 col-form-label">
-          Select seat
-        </label>
-        <div className="col-sm-10">
-          <div>
-            <PrevostX345SeatLayout onSeatSelection={handleSeatSelection} />
-          </div>
-        </div>
-      </div>
-
-      <div className="row mb-3">
-        <div className="col-sm-10 offset-sm-2">
-          <button type="submit" className="btn btn-primary">
-            Proceed to payment
-          </button>
-        </div>
-      </div>
-    </form>
+      )}
+    </div>
   );
 };
+
 export default Book;

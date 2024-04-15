@@ -13,8 +13,9 @@ import {
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import Home from "../home";
-import packages from "./packages";
+import Packages from "./packages";
 import LostAndFound from "./lostAndFound";
+import Booking from "./bookings";
 
 const { Header, Content, Sider } = Layout;
 
@@ -43,11 +44,6 @@ const items = [
     key: "/edit",
     icon: <EditOutlined />,
     label: "Edit",
-  },
-  {
-    key: "/track",
-    icon: <ReconciliationOutlined />,
-    label: "Track receipt",
   },
   {
     key: "/lost",
@@ -136,11 +132,10 @@ const Content2 = () => {
     <div>
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/bookings" element={<bookings />}></Route>
-        <Route path="/packages" element={<packages />}></Route>
+        <Route path="/bookings" element={<Booking />}></Route>
+        <Route path="/packages" element={<Packages />}></Route>
         <Route path="/finance" element={<finance />}></Route>
         <Route path="/edit" element={<edit />}></Route>
-        <Route path="/track" element={<track />}></Route>
         <Route path="/lost" element={<LostAndFound />}></Route>
       </Routes>
     </div>

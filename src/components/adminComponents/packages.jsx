@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const packages = () => {
+const Packages = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,39 +28,41 @@ const packages = () => {
       ) : packages.length === 0 ? (
         <p>No packages found.</p>
       ) : (
-        <table className="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Full Names</th>
-              <th>Tell Number</th>
-              <th>Recipient's Names</th>
-              <th>Recipient's Number</th>
-              <th>Destination</th>
-              <th>Chosen Bus</th>
-              <th>Shipping Date</th>
-              <th>Shipping Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {packages.map((pkg) => (
-              <tr key={pkg._id}>
-                <td>{pkg._id}</td>
-                <td>{pkg.fullNames}</td>
-                <td>{pkg.tellNumber}</td>
-                <td>{pkg.recipientsNames}</td>
-                <td>{pkg.recipientsNumber}</td>
-                <td>{pkg.destination}</td>
-                <td>{pkg.chosenBus}</td>
-                <td>{new Date(pkg.shippingDate).toLocaleDateString()}</td>
-                <td>{pkg.shippingTime}</td>
+        <div className="table-responsive">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Full Names</th>
+                <th>Tell Number</th>
+                <th>Recipient's Names</th>
+                <th>Recipient's Number</th>
+                <th>Destination</th>
+                <th>Chosen Bus</th>
+                <th>Shipping Date</th>
+                <th>Shipping Time</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {packages.map((pkg) => (
+                <tr key={pkg.packageID}>
+                  <td>{pkg.packageID}</td>
+                  <td>{pkg.fullNames}</td>
+                  <td>{pkg.tellNumber}</td>
+                  <td>{pkg.recipientsNames}</td>
+                  <td>{pkg.recipientsNumber}</td>
+                  <td>{pkg.destination}</td>
+                  <td>{pkg.chosenBus}</td>
+                  <td>{new Date(pkg.shippingDate).toLocaleDateString()}</td>
+                  <td>{pkg.shippingTime}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
 };
 
-export default packages;
+export default Packages;

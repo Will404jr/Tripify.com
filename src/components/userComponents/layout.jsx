@@ -56,11 +56,6 @@ const items = [
     label: "Trips",
   },
   {
-    key: "/ongoing",
-    icon: <ArrowsAltOutlined />,
-    label: "Ongoing trip",
-  },
-  {
     key: "logout",
     icon: <LogoutOutlined />,
     label: "Logout",
@@ -147,7 +142,6 @@ const Content2 = () => {
         <Route path="/schedules" element={<Buses />}></Route>
         <Route path="/lostandFound" element={<LostAndFound />}></Route>
         <Route path="/trips" element={<Trips />}></Route>
-        <Route path="/ongoing" element={<Ongoing />}></Route>
       </Routes>
     </div>
   );
