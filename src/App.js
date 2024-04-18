@@ -1,18 +1,24 @@
-import "./App.css";
-import Display from "./components/adminComponents/layout";
+// App.js
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import AuthControl from "./components/auth/authControl";
+import UserDisplay from "./components/userComponents/layout";
+import AdminDisplay from "./components/adminComponents/layout";
 import TravelForm from "./components/adminComponents/RegisterForm";
-import LostAndFound from "./components/userComponents/Lost and found/lostAndFound";
-import LostItems from "./components/userComponents/displayLostItems";
-import BusCompanyDetails from "./components/userComponents/buses/bus";
-
-// import Book from "./components/book";
-// import Display from "./components/layout";
-// import Package from "./components/deliverPackage";
+import SystemAdminDisplay from "./components/systemAdmin/layout";
+import LandingPage from "./components/landingPage";
+import RegisterAdmin from "./components/systemAdmin/registerAdmin";
 
 function App() {
   return (
     <div>
-      <Display />
+      <SystemAdminDisplay />
+      {/* <Routes>
+        <Route path="/" element={<AuthControl />} />
+        <Route path="/user" element={<UserDisplay />} />
+        <Route path="/admin" element={<AdminDisplay />} />
+        <Route path="/register" element={<TravelForm />} />
+      </Routes> */}
     </div>
   );
 }

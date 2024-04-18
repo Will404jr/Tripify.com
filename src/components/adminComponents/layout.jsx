@@ -58,7 +58,7 @@ const items = [
   },
 ];
 
-const Display = () => {
+const AdminDisplay = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("/");
 
@@ -142,4 +142,4 @@ const Content2 = () => {
   );
 };
 
-export default Display;
+export default AdminDisplay;

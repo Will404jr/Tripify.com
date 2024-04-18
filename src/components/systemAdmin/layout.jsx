@@ -2,24 +2,14 @@ import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   HomeOutlined,
-  DeliveredProcedureOutlined,
   UserOutlined,
-  ScheduleOutlined,
-  InfoCircleOutlined,
-  SendOutlined,
-  CarOutlined,
-  ArrowsAltOutlined,
+  AndroidOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-
-import Book from "./book";
-import Package from "./deliverPackage";
 import Home from "../home";
-import Trips from "./trips";
-import Buses from "./buses/buses";
-import Ongoing from "./ongoingTrip";
-import LostAndFound from "./Lost and found/lostAndFound";
+import UsersComponent from "./users";
+import AdminsComponent from "./admins";
 
 const { Header, Content, Sider } = Layout;
 
@@ -30,39 +20,34 @@ const items = [
     label: "Home",
   },
   {
-    key: "/book",
-    icon: <CarOutlined />,
-    label: "Book a trip",
+    key: "/admins",
+    icon: <AndroidOutlined />,
+    label: "Bus Admins",
   },
   {
-    key: "/package",
-    icon: <DeliveredProcedureOutlined />,
-    label: "Deliver a package",
+    key: "/users",
+    icon: <UserOutlined />,
+    label: "Users",
   },
+  //   {
+  //     key: "/addAdmin",
+  //     icon: <UserAddOutlined />,
+  //     label: "Add admin",
+  //   },
+  //   {
+  //     key: "/lostandFound",
+  //     icon: <InfoCircleOutlined />,
+  //     label: "Lost and found",
+  //   },
   {
-    key: "/schedules",
-    icon: <ScheduleOutlined />,
-    label: "Buses",
+    key: "logout",
+    icon: <LogoutOutlined />,
+    label: "Logout",
+    danger: true,
   },
-  {
-    key: "/lostandFound",
-    icon: <InfoCircleOutlined />,
-    label: "Lost and found",
-  },
-  // {
-  //   key: "/trips",
-  //   icon: <SendOutlined />,
-  //   label: "Trips",
-  // },
-  // {
-  //   key: "logout",
-  //   icon: <LogoutOutlined />,
-  //   label: "Logout",
-  //   danger: true,
-  // },
 ];
 
-const UserDisplay = () => {
+const SystemAdminDisplay = () => {
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState("/");
 
@@ -104,7 +89,8 @@ const UserDisplay = () => {
         >
           <h6>{findLabelByKey(selectedKey)}</h6>
           <div style={{ display: "flex" }}>
-            <h6>Manage trips</h6>
+            <UserOutlined style={{ marginRight: "20px" }} />
+            <h6>ADMINISTRATOR</h6>
           </div>
         </Header>
 
@@ -119,10 +105,9 @@ const UserDisplay = () => {
           >
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/book" element={<Book />} />
-              <Route path="/package" element={<Package />} />
-              <Route path="/schedules" element={<Buses />} />
-              <Route path="/lostandFound" element={<LostAndFound />} />
+              <Route path="/users" element={<UsersComponent />} />
+              <Route path="/admins" element={<AdminsComponent />} />
+              {/* <Route path="/addAdmin" element={<Buses />} /> */}
               {/* <Route path="/trips" element={<Trips />} /> */}
             </Routes>
           </div>
@@ -137,4 +122,4 @@ const findLabelByKey = (key) => {
   return foundItem ? foundItem.label : ""; // Return label or empty string
 };
 
-export default UserDisplay;
+export default SystemAdminDisplay;
