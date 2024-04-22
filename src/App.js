@@ -8,11 +8,13 @@ import TravelForm from "./components/adminComponents/RegisterForm";
 import SystemAdminDisplay from "./components/systemAdmin/layout";
 import LandingPage from "./components/landingPage";
 import RegisterAdmin from "./components/systemAdmin/registerAdmin";
+import ChangePassword from "./components/auth/changePassword";
+import PrevostX345SeatLayout from "./components/userComponents/BusSeat/seat";
 
 function App() {
   return (
     <div>
-      <SystemAdminDisplay />
+      <UserDisplay />
       {/* <Routes>
         <Route path="/" element={<AuthControl />} />
         <Route path="/user" element={<UserDisplay />} />

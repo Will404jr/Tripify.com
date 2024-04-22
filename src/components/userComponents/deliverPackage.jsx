@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const Package = () => {
   const [formData, setFormData] = useState({
     fullName: "",
+    email: "",
     phoneNumber: "",
     recipientName: "",
     recipientNumber: "",
@@ -82,13 +83,18 @@ const Package = () => {
     e.preventDefault();
 
     try {
+      // Generate a unique packageID
+      const packageID = generateShortPackageID();
+
       const response = await fetch("http://localhost:5000/api/packages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          packageID: packageID, // Include the generated packageID
           fullNames: formData.fullName,
+          email: formData.email,
           tellNumber: formData.phoneNumber,
           recipientsNames: formData.recipientName,
           recipientsNumber: formData.recipientNumber,
@@ -104,9 +110,53 @@ const Package = () => {
       }
 
       console.log("Package submitted successfully");
+
+      // Send email after successful submission
+      const emailResponse = await fetch(
+        "http://localhost:5000/api/package-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            ticketDetails: {
+              packageID: packageID, // Include the generated packageID
+              fullNames: formData.fullName,
+              email: formData.email,
+              tellNumber: formData.phoneNumber,
+              recipientsNames: formData.recipientName,
+              recipientsNumber: formData.recipientNumber,
+              destination: formData.destination,
+              chosenBus: formData.chosenBus,
+              shippingDate: formData.date,
+              shippingTime: formData.schedule,
+            },
+          }),
+        }
+      );
+
+      if (!emailResponse.ok) {
+        throw new Error("Failed to send email");
+      }
+
+      console.log("Email sent successfully");
     } catch (error) {
-      console.error("Error submitting package:", error);
+      console.error("Error:", error);
     }
+  };
+
+  // Function to generate a random short package ID
+  const generateShortPackageID = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let packageID = "";
+    for (let i = 0; i < 6; i++) {
+      packageID += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return packageID;
   };
 
   return (
@@ -116,15 +166,13 @@ const Package = () => {
       onSubmit={handleSubmit}
     >
       <div className="row mb-3">
-        <label htmlFor="fullName" className="col-sm-2 col-form-label">
-          Full Name
-        </label>
         <div className="col-sm-10">
           <input
             type="text"
             className="form-control"
             id="fullName"
             name="fullName"
+            placeholder="Full Name"
             value={formData.fullName}
             onChange={handleInputChange}
             required
@@ -132,15 +180,27 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="phoneNumber" className="col-sm-2 col-form-label">
-          Phone Number
-        </label>
+        <div className="col-sm-10">
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+      </div>
+      <div className="row mb-3">
         <div className="col-sm-10">
           <input
             type="tel"
             className="form-control"
             id="phoneNumber"
             name="phoneNumber"
+            placeholder="Phone Number"
             value={formData.phoneNumber}
             onChange={handleInputChange}
             required
@@ -148,15 +208,13 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="recipientName" className="col-sm-2 col-form-label">
-          Recipient's Name
-        </label>
         <div className="col-sm-10">
           <input
             type="text"
             className="form-control"
             id="recipientName"
             name="recipientName"
+            placeholder="Recipient's Name"
             value={formData.recipientName}
             onChange={handleInputChange}
             required
@@ -164,15 +222,13 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="recipientNumber" className="col-sm-2 col-form-label">
-          Recipient's Number
-        </label>
         <div className="col-sm-10">
           <input
             type="tel"
             className="form-control"
             id="recipientNumber"
             name="recipientNumber"
+            placeholder="Recipient's Number"
             value={formData.recipientNumber}
             onChange={handleInputChange}
             required
@@ -180,9 +236,6 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="destination" className="col-sm-2 col-form-label">
-          Destination
-        </label>
         <div className="col-sm-10">
           <select
             className="form-select"
@@ -206,9 +259,6 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="chosenBus" className="col-sm-2 col-form-label">
-          Choose Bus
-        </label>
         <div className="col-sm-10">
           <select
             className="form-select"
@@ -228,9 +278,6 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="station" className="col-sm-2 col-form-label">
-          Station
-        </label>
         <div className="col-sm-10">
           <select
             className="form-select"
@@ -250,15 +297,13 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="date" className="col-sm-2 col-form-label">
-          Date
-        </label>
         <div className="col-sm-10">
           <input
             type="date"
             className="form-control"
             id="date"
             name="date"
+            placeholder="Date"
             value={formData.date}
             onChange={handleInputChange}
             required
@@ -266,14 +311,12 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="schedule" className="col-sm-2 col-form-label">
-          Schedule
-        </label>
         <div className="col-sm-10">
           <select
             className="form-select"
             id="schedule"
             name="schedule"
+            placeholder="Select Schedule"
             value={formData.schedule}
             onChange={handleInputChange}
             required
@@ -288,9 +331,6 @@ const Package = () => {
         </div>
       </div>
       <div className="row mb-3">
-        <label htmlFor="courierPrice" className="col-sm-2 col-form-label">
-          Courier Price
-        </label>
         <div className="col-sm-10">
           <input
             type="text"

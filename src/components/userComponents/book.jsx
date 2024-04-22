@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
+import PrevostX345SeatLayout from "./BusSeat/seat";
 
 const Book = () => {
   const [buses, setBuses] = useState([]);
   const [filteredBuses, setFilteredBuses] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phoneNumber: "",
     destination: "",
     busCompany: "",
     station: "",
     date: "",
     schedule: "",
+    selectedSeat: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [ticketPrice, setTicketPrice] = useState(0);
 
   useEffect(() => {
-    // Fetch the bus data from the server
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/buses");
@@ -31,7 +33,6 @@ const Book = () => {
   }, []);
 
   useEffect(() => {
-    // Filter buses based on the selected destination
     const filteredBuses = buses.filter((bus) =>
       bus.stations.some((station) =>
         station.destinations.some((dest) => dest.name === formData.destination)
@@ -47,9 +48,8 @@ const Book = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     setSubmitted(true);
-    setTicketPrice(getTicketPrice()); // Calculate ticket price after form submission
+    setTicketPrice(getTicketPrice());
   };
 
   const getTicketPrice = () => {
@@ -65,15 +65,27 @@ const Book = () => {
     return selectedDestination ? selectedDestination.price : 0;
   };
 
+  const generateBookingID = () => {
+    const min = 100000;
+    const max = 999999;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
   const handleProceedToPayment = async () => {
     try {
+      const bookingID = generateBookingID();
+
       const bookingData = {
+        bookingID: bookingID,
         fullNames: formData.name,
+        email: formData.email,
         tellNumber: formData.phoneNumber,
         destination: formData.destination,
         chosenBus: formData.busCompany,
+        station: formData.station,
         selectedDate: formData.date,
         shippingTime: formData.schedule,
+        selectedSeat: formData.selectedSeat,
       };
 
       const response = await fetch("http://localhost:5000/api/bookings", {
@@ -88,7 +100,25 @@ const Book = () => {
         throw new Error("Failed to create booking");
       }
 
-      console.log("Booking created successfully");
+      // Send email after successful booking
+      const emailResponse = await fetch(
+        "http://localhost:5000/api/booking-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            ticketDetails: bookingData,
+          }),
+        }
+      );
+
+      if (!emailResponse.ok) {
+        throw new Error("Failed to send email");
+      }
+
       setSubmitted(true);
     } catch (error) {
       console.error("Error creating booking:", error);
@@ -96,74 +126,130 @@ const Book = () => {
   };
 
   return (
-    <div>
+    <div className="container mt-5">
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="tel"
-          name="phoneNumber"
-          placeholder="Phone Number"
-          onChange={handleChange}
-          required
-        />
-        <select name="destination" onChange={handleChange} required>
-          <option value="">Select Destination</option>
-          {buses.map((bus) =>
-            bus.stations
-              .flatMap((station) => station.destinations)
-              .map((destination) => (
-                <option key={destination._id} value={destination.name}>
-                  {destination.name}
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            placeholder="Name"
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <input
+            type="tel"
+            className="form-control"
+            name="phoneNumber"
+            placeholder="Phone Number"
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <select
+            className="form-select"
+            name="destination"
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Destination</option>
+            {buses.map((bus) =>
+              bus.stations
+                .flatMap((station) => station.destinations)
+                .map((destination) => (
+                  <option key={destination._id} value={destination.name}>
+                    {destination.name}
+                  </option>
+                ))
+            )}
+          </select>
+        </div>
+        <div className="mb-3">
+          <select
+            className="form-select"
+            name="busCompany"
+            value={formData.busCompany}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Bus</option>
+            {filteredBuses.map((bus) => (
+              <option key={bus._id} value={bus.company}>
+                {bus.company}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-3">
+          <select
+            className="form-select"
+            name="station"
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Station</option>
+            {filteredBuses
+              .flatMap((bus) => bus.stations)
+              .map((station) => (
+                <option key={station._id} value={station.stationName}>
+                  {station.stationName}
                 </option>
-              ))
-          )}
-        </select>
-        <select
-          name="busCompany"
-          value={formData.busCompany}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Bus</option>
-          {filteredBuses.map((bus) => (
-            <option key={bus._id} value={bus.company}>
-              {bus.company}
-            </option>
-          ))}
-        </select>
-        <select name="station" onChange={handleChange} required>
-          <option value="">Select Station</option>
-          {filteredBuses
-            .flatMap((bus) => bus.stations)
-            .map((station) => (
-              <option key={station._id} value={station.stationName}>
-                {station.stationName}
-              </option>
-            ))}
-        </select>
-        <input type="date" name="date" onChange={handleChange} required />
-        <select name="schedule" onChange={handleChange} required>
-          <option value="">Select Schedule</option>
-          {filteredBuses
-            .flatMap((bus) => bus.schedules)
-            .map((schedule, index) => (
-              <option key={index} value={schedule}>
-                {schedule}
-              </option>
-            ))}
-        </select>
-        <button type="submit">Submit</button>
+              ))}
+          </select>
+        </div>
+        <div className="mb-3">
+          <input
+            type="date"
+            className="form-control"
+            name="date"
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <select
+            className="form-select"
+            name="schedule"
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Schedule</option>
+            {filteredBuses
+              .flatMap((bus) => bus.schedules)
+              .map((schedule, index) => (
+                <option key={index} value={schedule}>
+                  {schedule}
+                </option>
+              ))}
+          </select>
+        </div>
+        <PrevostX345SeatLayout
+          selectedSeat={formData.selectedSeat} // Pass current selected seat
+          handleChange={handleChange} // Pass handleChange function as a prop
+        />
+        {/* <button type="submit" className="btn btn-primary">
+          Submit
+        </button> */}
       </form>
       {submitted && (
-        <div>
+        <div className="mt-3">
           <p>Ticket Price: ${ticketPrice}</p>
-          <button onClick={handleProceedToPayment}>Proceed to Payment</button>
+          <button className="btn btn-primary" onClick={handleProceedToPayment}>
+            Proceed to Payment
+          </button>
         </div>
       )}
     </div>

@@ -1,7 +1,17 @@
-/* Add custom CSS */
 .selected {
   background-color: #006bf8 !important;
   color: white !important;
 }
 
+.seat button {
+  width: 10px; /* Adjust the width as needed */
+  height: 10px; /* Adjust the height as needed */
+  font-size: 10px; /* Adjust the font size as needed */
+}
+
 /* Adjust the style as per your preference */
+tbody {
+  background-color: #f8f9fa; /* Light gray background */
+  width: 10%;
+  padding: 10px; /* Add padding around the tbody */
+}
