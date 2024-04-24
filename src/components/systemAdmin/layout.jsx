@@ -15,17 +15,17 @@ const { Header, Content, Sider } = Layout;
 
 const items = [
   {
-    key: "/",
+    key: "home",
     icon: <HomeOutlined />,
     label: "Home",
   },
   {
-    key: "/admins",
+    key: "admins",
     icon: <AndroidOutlined />,
     label: "Bus Admins",
   },
   {
-    key: "/users",
+    key: "users",
     icon: <UserOutlined />,
     label: "Users",
   },
@@ -67,7 +67,7 @@ const SystemAdminDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["/"]}
+          defaultSelectedKeys={["home"]}
           onClick={handleClick}
         >
           {items.map((item) => (
@@ -104,9 +104,9 @@ const SystemAdminDisplay = () => {
             }}
           >
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/users" element={<UsersComponent />} />
-              <Route path="/admins" element={<AdminsComponent />} />
+              <Route path="home" element={<Home />} />
+              <Route path="users" element={<UsersComponent />} />
+              <Route path="admins" element={<AdminsComponent />} />
               {/* <Route path="/addAdmin" element={<Buses />} /> */}
               {/* <Route path="/trips" element={<Trips />} /> */}
             </Routes>

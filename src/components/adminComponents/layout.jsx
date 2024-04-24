@@ -21,32 +21,32 @@ const { Header, Content, Sider } = Layout;
 
 const items = [
   {
-    key: "/",
+    key: "home",
     icon: <HomeOutlined />,
     label: "Home",
   },
   {
-    key: "/bookings",
+    key: "bookings",
     icon: <CarOutlined />,
     label: "Bookings",
   },
   {
-    key: "/packages",
+    key: "packages",
     icon: <GoldOutlined />,
     label: "Packages",
   },
   {
-    key: "/finance",
+    key: "finance",
     icon: <DollarOutlined />,
     label: "Finance",
   },
   {
-    key: "/edit",
+    key: "edit",
     icon: <EditOutlined />,
     label: "Edit",
   },
   {
-    key: "/lost",
+    key: "lost",
     icon: <InfoCircleOutlined />,
     label: "Lost and found",
   },
@@ -78,7 +78,7 @@ const AdminDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["/"]}
+          defaultSelectedKeys={["home"]}
           onClick={handleClick}
         >
           {items.map((item) => (
@@ -131,12 +131,12 @@ const Content2 = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/bookings" element={<Booking />}></Route>
-        <Route path="/packages" element={<Packages />}></Route>
-        <Route path="/finance" element={<finance />}></Route>
-        <Route path="/edit" element={<edit />}></Route>
-        <Route path="/lost" element={<LostAndFound />}></Route>
+        <Route path="home" element={<Home />}></Route>
+        <Route path="bookings" element={<Booking />}></Route>
+        <Route path="packages" element={<Packages />}></Route>
+        <Route path="finance" element={<finance />}></Route>
+        <Route path="edit" element={<edit />}></Route>
+        <Route path="lost" element={<LostAndFound />}></Route>
       </Routes>
     </div>
   );

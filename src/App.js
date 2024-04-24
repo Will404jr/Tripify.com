@@ -14,13 +14,14 @@ import PrevostX345SeatLayout from "./components/userComponents/BusSeat/seat";
 function App() {
   return (
     <div>
-      <UserDisplay />
-      {/* <Routes>
-        <Route path="/" element={<AuthControl />} />
-        <Route path="/user" element={<UserDisplay />} />
-        <Route path="/admin" element={<AdminDisplay />} />
+      {/* <UserDisplay /> */}
+      <Routes>
+        <Route path="/*" element={<UserDisplay />} />
+        <Route path="/auth" element={<AuthControl />} />
+        <Route path="/sysAdmin/*" element={<SystemAdminDisplay />} />
+        <Route path="/admin/*" element={<AdminDisplay />} />
         <Route path="/register" element={<TravelForm />} />
-      </Routes> */}
+      </Routes>
     </div>
   );
 }

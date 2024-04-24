@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { loginValidation } from "./loginValidation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../auth.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const initialValues = {
   email: "",
@@ -12,34 +12,53 @@ const initialValues = {
 };
 
 const Login = () => {
-  const [formSubmitted, setFormSubmitted] = useState(false); // State to track form submission
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginValidation,
     onSubmit: async (values) => {
-      setFormSubmitted(true); // Set formSubmitted to true on submission
+      setFormSubmitted(true);
 
       try {
         const response = await fetch("http://localhost:5000/api/login", {
-          method: "POST", // Changed method to POST for login
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(values),
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-          const errorData = await response.json();
-          toast.error(errorData.message || "Login failed");
-          console.error("Error logging in:", errorData);
-          throw new Error(errorData.message || "Login failed");
+          toast.error(data.message || "Login failed");
+          console.error("Error logging in:", data);
+          return;
         }
 
-        const data = await response.json();
-        navigate("/user");
-        // Handle successful login data if needed (e.g., navigate to a different page)
+        const { token, user } = data;
+
+        // Store token and user details in localStorage or sessionStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        // Check account type and navigate accordingly
+        switch (user.accountType) {
+          case "admin":
+            navigate("/admin");
+            break;
+          case "user":
+            navigate("/user");
+            break;
+          case "sysAdmin":
+            navigate("/sysadmin");
+            break;
+          default:
+            navigate("/"); // Default route for unknown account types
+            break;
+        }
       } catch (error) {
         toast.error(error.message || "Login failed");
         console.error("Error logging in:", error);
@@ -96,11 +115,6 @@ const Login = () => {
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
-
-        {/* Conditionally render success message only if form is submitted and no errors
-        {formSubmitted && Object.keys(formik.errors).length === 0 && (
-          <p className="success-message">Login successful!</p>
-        )} */}
       </form>
     </>
   );

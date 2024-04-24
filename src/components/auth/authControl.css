@@ -1,0 +1,19 @@
+.container {
+  width: 300px;
+  margin: auto; /* This will center the container horizontally */
+  margin-top: 150px; /* Adjust as needed for vertical centering */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.link {
+  color: blue;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

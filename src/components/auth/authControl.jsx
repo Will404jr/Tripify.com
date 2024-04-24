@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Login from "./Login/Login";
 import Register from "./Register";
+import "./authControl.css"; // Import the CSS file
 
 function AuthControl() {
   const [showRegister, setShowRegister] = useState(false);
@@ -15,15 +16,23 @@ function AuthControl() {
 
   return (
     <div className="container">
+      {" "}
+      {/* Apply container class */}
       {showRegister ? (
         <>
           <Register />
-          <p onClick={handleBackToLoginClick}>Back to Login</p>
+          <p className="link" onClick={handleBackToLoginClick}>
+            Back to Login
+          </p>{" "}
+          {/* Apply link class */}
         </>
       ) : (
         <>
           <Login />
-          <p onClick={handleCreateAccountClick}>Create an account</p>
+          <p className="link" onClick={handleCreateAccountClick}>
+            Create an account
+          </p>{" "}
+          {/* Apply link class */}
         </>
       )}
     </div>
