@@ -1,8 +1,26 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
+  const [filteredBookings, setFilteredBookings] = useState([]);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/login"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+
+  // Assuming you have access to the decoded user object
+  const decodedUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -16,6 +34,15 @@ const Booking = () => {
 
     fetchBookings();
   }, []);
+
+  useEffect(() => {
+    if (decodedUser && decodedUser.company) {
+      const filtered = bookings.filter(
+        (booking) => booking.chosenBus === decodedUser.company
+      );
+      setFilteredBookings(filtered);
+    }
+  }, [decodedUser, bookings]);
 
   return (
     <div className="container">
@@ -35,7 +62,7 @@ const Booking = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((booking, index) => (
+            {filteredBookings.map((booking, index) => (
               <tr key={index}>
                 <td>{booking.bookingID}</td>
                 <td>{booking.fullNames}</td>

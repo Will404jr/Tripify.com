@@ -44,10 +44,15 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Check account type and navigate accordingly
+        // Check account type
         switch (user.accountType) {
           case "admin":
-            navigate("/admin");
+            // Check if it's the user's first login
+            if (user.firstLogin) {
+              navigate("/register");
+            } else {
+              navigate("/admin");
+            }
             break;
           case "user":
             navigate("/user");

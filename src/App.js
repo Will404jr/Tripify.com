@@ -10,6 +10,8 @@ import LandingPage from "./components/landingPage";
 import RegisterAdmin from "./components/systemAdmin/registerAdmin";
 import ChangePassword from "./components/auth/changePassword";
 import PrevostX345SeatLayout from "./components/userComponents/BusSeat/seat";
+import Otp from "./components/auth/Otp";
+import OtpConfirmation from "./components/auth/OtpConfirmation";
 
 function App() {
   return (
@@ -20,7 +22,10 @@ function App() {
         <Route path="/auth" element={<AuthControl />} />
         <Route path="/sysAdmin/*" element={<SystemAdminDisplay />} />
         <Route path="/admin/*" element={<AdminDisplay />} />
-        <Route path="/register" element={<TravelForm />} />
+        {/* <Route path="/register" element={<TravelForm />} /> */}
+        <Route path="/forgot-password" element={<Otp />} />
+        <Route path="/otp-confirmation" element={<OtpConfirmation />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Routes>
     </div>
   );

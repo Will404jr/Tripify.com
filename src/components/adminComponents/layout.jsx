@@ -1,5 +1,6 @@
-import React from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import {
   HomeOutlined,
   DollarOutlined,
@@ -16,6 +17,8 @@ import Home from "../home";
 import Packages from "./packages";
 import LostAndFound from "./lostAndFound";
 import Booking from "./bookings";
+import Finance from "./finance";
+import TravelForm from "./RegisterForm";
 
 const { Header, Content, Sider } = Layout;
 
@@ -43,7 +46,7 @@ const items = [
   {
     key: "edit",
     icon: <EditOutlined />,
-    label: "Edit",
+    label: "Bus Details",
   },
   {
     key: "lost",
@@ -60,16 +63,34 @@ const items = [
 
 const AdminDisplay = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [selectedKey, setSelectedKey] = React.useState("/");
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/login"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    setSelectedKey(window.location.pathname); // Set selected key based on current path
+  }, []);
 
   const handleClick = ({ key }) => {
     setSelectedKey(key);
     if (key === "logout") {
-      // Implement logout feature
+      localStorage.removeItem("token"); // Remove token from localStorage
+      navigate("/login"); // Redirect to login
     } else {
       navigate(key);
     }
   };
+
+  if (!user) return null; // Render nothing until user is loaded
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -101,7 +122,7 @@ const AdminDisplay = () => {
           <h6>{findLabelByKey(selectedKey)}</h6>
           <div style={{ display: "flex" }}>
             <UserOutlined style={{ marginRight: "20px" }} />
-            <h6>GLOBAL COACHES</h6>
+            <h6>{user.email}</h6>
           </div>
         </Header>
 
@@ -131,12 +152,12 @@ const Content2 = () => {
   return (
     <div>
       <Routes>
-        <Route path="home" element={<Home />}></Route>
-        <Route path="bookings" element={<Booking />}></Route>
-        <Route path="packages" element={<Packages />}></Route>
-        <Route path="finance" element={<finance />}></Route>
-        <Route path="edit" element={<edit />}></Route>
-        <Route path="lost" element={<LostAndFound />}></Route>
+        <Route path="home" element={<Home />} />
+        <Route path="bookings" element={<Booking />} />
+        <Route path="packages" element={<Packages />} />
+        <Route path="finance" element={<Finance />} />
+        <Route path="edit" element={<TravelForm />} />
+        <Route path="lost" element={<LostAndFound />} />
       </Routes>
     </div>
   );

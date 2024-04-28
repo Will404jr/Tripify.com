@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ChangePassword() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ function ChangePassword() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate(); // Hook for navigation
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,6 +42,9 @@ function ChangePassword() {
         newPassword: "",
         confirmPassword: "",
       });
+
+      // Navigate to /auth after successful password change
+      navigate("/auth");
     } catch (error) {
       setError(error.response.data.message);
     }

@@ -3,6 +3,7 @@ import axios from "axios";
 
 const RegisterAdmin = () => {
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
   const [generatedPassword, setGeneratedPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -34,11 +35,13 @@ const RegisterAdmin = () => {
       // Send data to register endpoint
       await axios.post("http://localhost:5000/api/register", {
         email: email,
+        company: company,
         password: generatedPassword,
         accountType: "admin", // Set accountType to 'admin'
       });
       // Reset form and loading state
       setEmail("");
+      setCompany("");
       setGeneratedPassword("");
       setLoading(false);
       window.location.reload();
@@ -62,6 +65,16 @@ const RegisterAdmin = () => {
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Company name:</label>
+          <input
+            type="text"
+            className="form-control"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
             required
           />
         </div>

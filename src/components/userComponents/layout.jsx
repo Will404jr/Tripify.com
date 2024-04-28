@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import {
   HomeOutlined,
   DeliveredProcedureOutlined,
@@ -52,19 +53,39 @@ const items = [
     key: "trips",
     icon: <SendOutlined />,
     label: "Manage trips",
-    loggedIn: true, // New property to indicate it's displayed when logged in
+    loggedIn: true,
+  },
+  {
+    key: "logout", // Add a logout menu item
+    icon: <LogoutOutlined />,
+    label: "Logout",
+    loggedIn: true,
   },
 ];
 
 const UserDisplay = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [selectedKey, setSelectedKey] = useState("/");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track authentication status
+  const isLoggedIn = !!user; // Check if user is logged in
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    }
+  }, []);
+
+  useEffect(() => {
+    setSelectedKey(window.location.pathname); // Set selected key based on current path
+  }, []);
 
   const handleClick = ({ key }) => {
     setSelectedKey(key);
     if (key === "logout") {
-      // Implement logout feature
+      localStorage.removeItem("token"); // Remove token from localStorage
+      window.location.reload(); // Refresh the page
     } else {
       navigate(key);
     }
@@ -77,13 +98,13 @@ const UserDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["home"]} // Default selected key
+          defaultSelectedKeys={["home"]}
+          selectedKeys={[selectedKey]}
           onClick={handleClick}
         >
           {items.map((item) =>
-            // Conditionally render menu item based on authentication status
             (item.loggedIn && isLoggedIn) || !item.loggedIn ? (
-              <Menu.Item key={item.key} icon={item.icon}>
+              <Menu.Item key={item.key} icon={item.icon} onClick={item.onClick}>
                 {item.label}
               </Menu.Item>
             ) : null
@@ -102,17 +123,13 @@ const UserDisplay = () => {
         >
           <h6>{findLabelByKey(selectedKey)}</h6>
           <div style={{ display: "flex" }}>
-            {!isLoggedIn && ( // Display login link if not logged in
+            {isLoggedIn ? (
+              // Display user's email if logged in
+              <h6>{user.email}</h6>
+            ) : (
+              // Display login link if not logged in
               <Link to="/auth">
-                <h6
-                  style={{
-                    cursor: "pointer",
-                    transition: "transform 0.3s ease",
-                    ":hover": { transform: "scale(3.3)" },
-                  }}
-                >
-                  Login/Register
-                </h6>
+                <h6>Login/Register</h6>
               </Link>
             )}
           </div>
@@ -144,7 +161,7 @@ const UserDisplay = () => {
 
 const findLabelByKey = (key) => {
   const foundItem = items.find((item) => item.key === key);
-  return foundItem ? foundItem.label : ""; // Return label or empty string
+  return foundItem ? foundItem.label : "";
 };
 
 export default UserDisplay;

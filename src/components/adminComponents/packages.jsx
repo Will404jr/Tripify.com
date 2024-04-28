@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
 const Packages = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/login"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+  // Assuming you have access to the decoded user object
+  const decodedUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -19,6 +35,15 @@ const Packages = () => {
 
     fetchPackages();
   }, []);
+
+  useEffect(() => {
+    if (decodedUser && decodedUser.company) {
+      const filtered = packages.filter(
+        (pkg) => pkg.company === decodedUser.company
+      );
+      setPackages(filtered);
+    }
+  }, [decodedUser, packages]);
 
   return (
     <div className="container mt-4">

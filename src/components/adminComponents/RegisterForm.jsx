@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import ImageUpload from "./ImageUpload";
 import "./RegisterForm.css";
 import axios from "axios";
@@ -14,6 +16,26 @@ const TravelForm = () => {
     { stationName: "", destinations: [{ name: "", price: "" }] },
   ]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/login"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+
+  const decodedUser = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (decodedUser && decodedUser.company) {
+      setCompanyName(decodedUser.company);
+    }
+  }, [decodedUser]);
 
   const handleStationChange = (index, field, value) => {
     const updatedStations = [...stations];
