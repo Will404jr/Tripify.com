@@ -1,0 +1,22 @@
+.container {
+  background-color: #eafefc;
+}
+
+.cleared {
+  color: green; /* Modify the color or any other style for cleared bookings */
+}
+
+.uncleared {
+  color: red; /* Modify the color or any other style for uncleared bookings */
+}
+
+.card-container {
+  background-color: #eafefc;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.booking-card {
+  width: 300px;
+  margin: 10px;
+}

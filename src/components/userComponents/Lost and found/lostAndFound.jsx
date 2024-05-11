@@ -44,13 +44,17 @@ const LostItems = () => {
               </figure>
             )}
             <div className="lost-item-details">
-              <h6 className="lost-item-title">
-                Description: {lostItem.description}
-              </h6>
-              <h6 className="lost-item-info">
-                Bus company: {lostItem.station}
-              </h6>
-              <h6 className="lost-item-info">Contact: {lostItem.contact}</h6>
+              <p className="lost-item-title">
+                <strong> Description: </strong>
+                {lostItem.description}
+              </p>
+              <p className="lost-item-info">
+                <strong>Bus company:</strong> {lostItem.station}
+              </p>
+              <p className="lost-item-info">
+                <strong>Contact: </strong>
+                {lostItem.contact}
+              </p>
             </div>
           </div>
         ))}

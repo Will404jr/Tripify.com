@@ -1,11 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import LostsCrud from "./lostsCRUD";
 
 const LostAndFound = () => {
   const [description, setDescription] = useState("");
-  const [station, setStation] = useState("");
+  const [company, setCompany] = useState("");
   const [contact, setContact] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/auth"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+
+  // Assuming you have access to the decoded user object
+  const decodedUser = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    if (decodedUser && decodedUser.company) {
+      setCompany(decodedUser.company);
+    }
+  }, [decodedUser]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -13,8 +37,8 @@ const LostAndFound = () => {
       case "description":
         setDescription(value);
         break;
-      case "station":
-        setStation(value);
+      case "company":
+        setCompany(value);
         break;
       case "contact":
         setContact(value);
@@ -52,7 +76,7 @@ const LostAndFound = () => {
     // Construct a single data object with all form values
     const dataObject = {
       description: description,
-      station: station,
+      company: company,
       contact: contact,
       images: imageUrls, // Assuming imageUrls is an array of image URLs
     };
@@ -73,44 +97,47 @@ const LostAndFound = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="description">Description:</label>
-      <input
-        type="text"
-        id="description"
-        name="description"
-        value={description}
-        onChange={handleInputChange}
-        required
-      />
-      <label htmlFor="station">Station:</label>
-      <input
-        type="text"
-        id="station"
-        name="station"
-        value={station}
-        onChange={handleInputChange}
-        required
-      />
-      <label htmlFor="contact">Contact:</label>
-      <input
-        type="text"
-        id="contact"
-        name="contact"
-        value={contact}
-        onChange={handleInputChange}
-        required
-      />
-      <label htmlFor="images">Images (Optional):</label>
-      <input
-        type="file"
-        id="images"
-        name="images"
-        multiple
-        onChange={handleImageChange}
-      />
-      <button type="submit">Submit Lost Item</button>
-    </form>
+    <>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="description">Description:</label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value={description}
+          onChange={handleInputChange}
+          required
+        />
+        <label htmlFor="company">Company:</label>
+        <input
+          type="text"
+          id="company"
+          name="company"
+          value={company}
+          onChange={handleInputChange}
+          required
+        />
+        <label htmlFor="contact">Contact:</label>
+        <input
+          type="text"
+          id="contact"
+          name="contact"
+          value={contact}
+          onChange={handleInputChange}
+          required
+        />
+        <label htmlFor="images">Images (Optional):</label>
+        <input
+          type="file"
+          id="images"
+          name="images"
+          multiple
+          onChange={handleImageChange}
+        />
+        <button type="submit">Submit Lost Item</button>
+      </form>
+      <LostsCrud />
+    </>
   );
 };
 

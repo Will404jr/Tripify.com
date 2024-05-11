@@ -27,14 +27,14 @@ function AuthControl() {
       ) : (
         <>
           <Login />
-          <p className="link" onClick={handleCreateAccountClick}>
-            Create an account
-          </p>
           <Link to="/forgot-password" className="link">
             {" "}
             {/* Add Forgot Password link */}
             Forgot Password
           </Link>
+          <p className="link" onClick={handleCreateAccountClick}>
+            Create an account
+          </p>
         </>
       )}
     </div>

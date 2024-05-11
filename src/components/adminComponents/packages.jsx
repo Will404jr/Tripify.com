@@ -18,8 +18,6 @@ const Packages = () => {
       navigate("/login"); // Redirect to login if token not found
     }
   }, [navigate]);
-  // Assuming you have access to the decoded user object
-  const decodedUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -36,14 +34,16 @@ const Packages = () => {
     fetchPackages();
   }, []);
 
-  useEffect(() => {
-    if (decodedUser && decodedUser.company) {
-      const filtered = packages.filter(
-        (pkg) => pkg.company === decodedUser.company
-      );
-      setPackages(filtered);
+  const handleClearPackage = async (_id) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/packages/${_id}/clear`);
+      // Fetch packages again after clearing
+      const response = await axios.get("http://localhost:5000/api/packages");
+      setPackages(response.data);
+    } catch (error) {
+      console.error("Error clearing package:", error);
     }
-  }, [decodedUser, packages]);
+  };
 
   return (
     <div className="container mt-4">
@@ -63,23 +63,34 @@ const Packages = () => {
                 <th>Recipient's Names</th>
                 <th>Recipient's Number</th>
                 <th>Destination</th>
-                <th>Chosen Bus</th>
                 <th>Shipping Date</th>
                 <th>Shipping Time</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {packages.map((pkg) => (
-                <tr key={pkg.packageID}>
+                <tr key={pkg._id}>
                   <td>{pkg.packageID}</td>
                   <td>{pkg.fullNames}</td>
                   <td>{pkg.tellNumber}</td>
                   <td>{pkg.recipientsNames}</td>
                   <td>{pkg.recipientsNumber}</td>
                   <td>{pkg.destination}</td>
-                  <td>{pkg.chosenBus}</td>
                   <td>{new Date(pkg.shippingDate).toLocaleDateString()}</td>
                   <td>{pkg.shippingTime}</td>
+                  <td>
+                    {!pkg.cleared ? (
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleClearPackage(pkg._id)}
+                      >
+                        Clear
+                      </button>
+                    ) : (
+                      <span>Cleared</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

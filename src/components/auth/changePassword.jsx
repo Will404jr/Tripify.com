@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
+import "./changePassword.css";
 
 function ChangePassword() {
   const [formData, setFormData] = useState({
@@ -9,8 +11,7 @@ function ChangePassword() {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,7 +20,6 @@ function ChangePassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     const { email, newPassword, confirmPassword } = formData;
 
@@ -36,7 +36,10 @@ function ChangePassword() {
         { email, newPassword }
       );
 
-      setSuccess(response.data.message);
+      // Show success message
+      message.success(response.data.message);
+
+      // Clear form data
       setFormData({
         email: "",
         newPassword: "",
@@ -51,10 +54,9 @@ function ChangePassword() {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       <h2>Change Password</h2>
       {error && <div className="alert alert-danger">{error}</div>}
-      {success && <div className="alert alert-success">{success}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">

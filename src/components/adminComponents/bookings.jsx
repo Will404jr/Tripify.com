@@ -15,7 +15,7 @@ const Booking = () => {
       const decodedUser = jwtDecode(jwt);
       setUser(decodedUser);
     } else {
-      navigate("/login"); // Redirect to login if token not found
+      navigate("/auth"); // Redirect to login if token not found
     }
   }, [navigate]);
 
@@ -44,6 +44,19 @@ const Booking = () => {
     }
   }, [decodedUser, bookings]);
 
+  const handleClearBooking = async (bookingId) => {
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/bookings/${bookingId}/clear`
+      );
+      // Refresh bookings after clearing
+      const response = await axios.get("http://localhost:5000/api/bookings");
+      setBookings(response.data);
+    } catch (error) {
+      console.error("Error clearing booking:", error);
+    }
+  };
+
   return (
     <div className="container">
       <h2>Booking Data</h2>
@@ -59,6 +72,7 @@ const Booking = () => {
               <th>Selected Date</th>
               <th>Shipping Time</th>
               <th>Selected Seat</th>
+              <th>Actions</th> {/* New column for actions */}
             </tr>
           </thead>
           <tbody>
@@ -72,6 +86,18 @@ const Booking = () => {
                 <td>{new Date(booking.selectedDate).toLocaleDateString()}</td>
                 <td>{booking.shippingTime}</td>
                 <td>{booking.selectedSeat}</td>
+                <td>
+                  {booking.cleared ? (
+                    <span>Cleared</span>
+                  ) : (
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleClearBooking(booking._id)}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

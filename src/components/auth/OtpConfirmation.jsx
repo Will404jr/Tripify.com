@@ -44,21 +44,30 @@ function OtpConfirmation() {
   };
 
   return (
-    <div className="otp-confirmation-container">
-      <h2>OTP Confirmation</h2>
-      <p>Please enter the 5-digit OTP sent to your email.</p>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          maxLength="5"
-          value={otp}
-          onChange={handleChange}
-          className="otp-input"
-        />
-        <button type="submit" className="otp-submit-button">
-          Submit
-        </button>
-      </form>
+    <div className="container">
+      <div className="row justify-content-center align-items-center vh-100">
+        <div className="col-md-6">
+          <div className="otp-confirmation-container">
+            <h2>OTP Confirmation</h2>
+            <p>Please enter the 5-digit OTP sent to your email.</p>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                maxLength="5"
+                value={otp}
+                onChange={handleChange}
+                className="form-control otp-input"
+              />
+              <button
+                type="submit"
+                className="btn btn-primary otp-submit-button"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

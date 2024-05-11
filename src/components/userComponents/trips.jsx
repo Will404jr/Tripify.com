@@ -1,60 +1,88 @@
-import React from "react";
-
-const tripsData = [
-  {
-    bus: "Bus 1 (Luxury)",
-    from: "City A",
-    to: "City B",
-    departureTime: "09:00 AM",
-    arrivalTime: "01:00 PM",
-    date: "2024-03-25", // Sample date
-  },
-  {
-    bus: "Bus 2 (Standard)",
-    from: "City B",
-    to: "City C",
-    departureTime: "11:00 AM",
-    arrivalTime: "04:00 PM",
-    date: "2024-03-26", // Sample date
-  },
-  // ... Add 8 more dummy data objects with "date" property
-  {
-    bus: "Bus X (Express)",
-    from: "City Z",
-    to: "City A",
-    departureTime: "07:00 PM",
-    arrivalTime: "10:00 PM",
-    date: "2024-03-27", // Sample date
-  },
-];
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import { Card } from "antd";
+import "./trips.css"; // Import a custom CSS file for additional styling
 
 const Trips = () => {
+  const [bookings, setBookings] = useState([]);
+  const [filteredBookings, setFilteredBookings] = useState([]);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/auth"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+
+  // Assuming you have access to the decoded user object
+  const decodedUser = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/bookings");
+        setBookings(response.data);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
+  useEffect(() => {
+    if (decodedUser && decodedUser.email) {
+      const filtered = bookings.filter(
+        (booking) => booking.email === decodedUser.email
+      );
+      setFilteredBookings(filtered);
+    }
+  }, [decodedUser, bookings]);
+
   return (
     <div className="container">
-      <table className="table table-striped table-bordered table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Bus</th>
-            <th scope="col">Date</th>
-            <th scope="col">From</th>
-            <th scope="col">To</th>
-            <th scope="col">Departure Time</th>
-            <th scope="col">Arrival Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tripsData.map((trip, index) => (
-            <tr key={index}>
-              <td>{trip.bus}</td>
-              <td>{trip.date}</td>
-              <td>{trip.from}</td>
-              <td>{trip.to}</td>
-              <td>{trip.departureTime}</td>
-              <td>{trip.arrivalTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="card-container">
+        {filteredBookings.map((booking, index) => (
+          <Card key={index} className="booking-card">
+            <p>
+              <strong>Ticket ID:</strong> {booking.bookingID}
+            </p>
+            <p>
+              <strong>To:</strong> {booking.destination}
+            </p>
+            <p>
+              <strong>Chosen Bus:</strong> {booking.chosenBus}
+            </p>
+            <p>
+              <strong>Station:</strong> {booking.station}
+            </p>
+            <p>
+              <strong>Travel Date:</strong>{" "}
+              {new Date(booking.selectedDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Departure Time:</strong> {booking.shippingTime}
+            </p>
+            <p>
+              <strong>Occupied Seat:</strong> {booking.selectedSeat}
+            </p>
+            <button
+              className={`btn ${
+                booking.cleared ? "btn-secondary" : "btn-danger"
+              }`}
+            >
+              {booking.cleared ? "Cleared" : "Uncleared"}
+            </button>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
