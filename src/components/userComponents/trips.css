@@ -1,22 +1,50 @@
-.container {
-  background-color: #eafefc;
+.cont {
+  margin: 20px;
+  width: 100%; /* Adjust width as needed */
 }
 
-.cleared {
-  color: green; /* Modify the color or any other style for cleared bookings */
-}
-
-.uncleared {
-  color: red; /* Modify the color or any other style for uncleared bookings */
-}
-
-.card-container {
-  background-color: #eafefc;
+.card-cont {
   display: flex;
   flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between; /* Distribute space between cards */
 }
 
 .booking-card {
-  width: 300px;
-  margin: 10px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: calc(50% - 20px); /* Adjust the width as needed */
+  flex-basis: calc(50% - 20px); /* Basis for calculating width */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+@media screen and (max-width: 768px) {
+  .booking-card {
+    width: calc(100% - 20px); /* Make cards full width on smaller screens */
+    flex-basis: calc(100% - 20px); /* Basis for calculating width */
+  }
+}
+
+.booking-info {
+  margin-bottom: 10px;
+}
+
+.booking-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.booking-button.cleared {
+  background-color: #28a745; /* Green */
+  color: #fff;
+}
+
+.booking-button.uncleared {
+  background-color: #dc3545; /* Red */
+  color: #fff;
 }

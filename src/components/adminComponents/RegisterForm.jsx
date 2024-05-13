@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import ImageUpload from "./ImageUpload";
+import { message } from "antd";
 import "./RegisterForm.css";
 import axios from "axios";
 
@@ -122,48 +123,45 @@ const TravelForm = () => {
       );
       console.log(response.data); // Handle successful response
       setIsSubmitted(true); // Set submitted state to true
+
+      // Display success message and navigate to /admin
+      message.success("Bus registration successful", () => {
+        navigate("/admin");
+      });
     } catch (error) {
       console.error(error); // Handle error
     }
   };
   return (
-    <div className="container">
+    <div className="card">
       <h2>Company Registration Form</h2>
-      <label>
-        Company Name:
-        <input
-          type="text"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-        />
-      </label>
+      <input
+        type="text"
+        placeholder="Company Name"
+        value={companyName}
+        onChange={(e) => setCompanyName(e.target.value)}
+      />
       <br />
-      <label>
-        Manager:
-        <input
-          type="text"
-          value={manager}
-          onChange={(e) => setManager(e.target.value)}
-        />
-      </label>
+      <input
+        type="text"
+        placeholder="Manager"
+        value={manager}
+        onChange={(e) => setManager(e.target.value)}
+      />
       <br />
-      <label>
-        Contact:
-        <input
-          type="text"
-          value={contact}
-          onChange={(e) => setContact(e.target.value)}
-        />
-      </label>
+      <input
+        type="text"
+        placeholder="Contact"
+        value={contact}
+        onChange={(e) => setContact(e.target.value)}
+      />
       <br />
-      <label>
-        Courrier Price:
-        <input
-          type="number"
-          value={courrierPrice}
-          onChange={(e) => setCourrierPrice(e.target.value)}
-        />
-      </label>
+      <input
+        type="number"
+        placeholder="Courrier price"
+        value={courrierPrice}
+        onChange={(e) => setCourrierPrice(e.target.value)}
+      />
       <br />
       <label htmlFor="images">Images (Optional):</label>
       <input
@@ -190,68 +188,58 @@ const TravelForm = () => {
           </label>
         </div>
       ))}
-      <button className="btn btn-primary mt-3" onClick={handleAddSchedule}>
+      <button className="button-primary" onClick={handleAddSchedule}>
         Add Schedule
       </button>
       <br />
       {stations.map((station, stationIndex) => (
-        <div className="card mt-3" key={stationIndex}>
-          <div className="card-body">
-            <h3 className="card-title">Station {stationIndex + 1}</h3>
-            <label>
-              Station Name:
-              <input
-                type="text"
-                value={station.stationName}
-                onChange={(e) =>
-                  handleStationChange(
-                    stationIndex,
-                    "stationName",
-                    e.target.value
-                  )
-                }
-              />
-            </label>
+        <div className="card1" key={stationIndex}>
+          <div className="card3">
+            <h3 className="card2">Station {stationIndex + 1}</h3>
+            <input
+              type="text"
+              placeholder="Station Name"
+              value={station.stationName}
+              onChange={(e) =>
+                handleStationChange(stationIndex, "stationName", e.target.value)
+              }
+            />
             <br />
             {station.destinations.map((destination, destinationIndex) => (
-              <div className="row mt-3" key={destinationIndex}>
-                <div className="col">
-                  <label>
-                    Destination Name:
-                    <input
-                      type="text"
-                      value={destination.name}
-                      onChange={(e) =>
-                        handleDestinationChange(
-                          stationIndex,
-                          destinationIndex,
-                          "name",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
+              <div className="row1" key={destinationIndex}>
+                <div className="col1">
+                  <input
+                    type="text"
+                    placeholder="Destination Name"
+                    value={destination.name}
+                    onChange={(e) =>
+                      handleDestinationChange(
+                        stationIndex,
+                        destinationIndex,
+                        "name",
+                        e.target.value
+                      )
+                    }
+                  />
                 </div>
-                <div className="col">
-                  <label>
-                    Destination Price:
-                    <input
-                      type="text"
-                      value={destination.price}
-                      onChange={(e) =>
-                        handleDestinationChange(
-                          stationIndex,
-                          destinationIndex,
-                          "price",
-                          e.target.value
-                        )
-                      }
-                    />
-                  </label>
+                <div className="col1">
+                  <input
+                    type="text"
+                    placeholder="Destination Price"
+                    value={destination.price}
+                    onChange={(e) =>
+                      handleDestinationChange(
+                        stationIndex,
+                        destinationIndex,
+                        "price",
+                        e.target.value
+                      )
+                    }
+                  />
                 </div>
-                <div className="col">
+                <div className="col1">
                   <button
-                    className="btn btn-danger"
+                    className="button-danger"
                     onClick={() =>
                       handleDeleteDestination(stationIndex, destinationIndex)
                     }
@@ -262,31 +250,32 @@ const TravelForm = () => {
               </div>
             ))}
             <button
-              className="btn btn-primary mt-3"
+              className="button-primary"
               onClick={() => handleAddDestination(stationIndex)}
             >
               Add Destination
             </button>
           </div>
+          <br />
           <button
-            className="btn btn-danger"
+            className="button-danger"
             onClick={() => handleDeleteStation(stationIndex)}
           >
             Delete Station
           </button>
         </div>
       ))}
-      <button className="btn btn-primary mt-3" onClick={handleAddStation}>
+      <button className="button-primary" onClick={handleAddStation}>
         Add Station
       </button>
+      <br />
       <button
-        className="btn btn-success mt-3"
+        className="button-success"
         onClick={handleRegister}
         disabled={isSubmitted}
       >
         {isSubmitted ? "Registration Successful" : "Register"}
       </button>
-      {isSubmitted && <ImageUpload companyName={companyName} />}
     </div>
   );
 };

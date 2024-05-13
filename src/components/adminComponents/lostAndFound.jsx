@@ -2,35 +2,43 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { message } from "antd";
+
 import LostsCrud from "./lostsCRUD";
 
 const LostAndFound = () => {
+  const navigate = useNavigate();
+
+  // Initialize state variables
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
+  const [station, setStation] = useState("");
   const [contact, setContact] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
-  const navigate = useNavigate();
+
+  // Get the decoded user object from local storage
+  const decodedUser = jwtDecode(localStorage.getItem("token"));
+
+  // Initialize user state variable
   const [user, setUser] = useState(null);
 
+  // Set the user state variable when the component mounts
   useEffect(() => {
-    const jwt = localStorage.getItem("token");
-    if (jwt) {
-      const decodedUser = jwtDecode(jwt);
+    if (decodedUser) {
       setUser(decodedUser);
     } else {
       navigate("/auth"); // Redirect to login if token not found
     }
-  }, [navigate]);
+  }, [decodedUser, navigate]);
 
-  // Assuming you have access to the decoded user object
-  const decodedUser = JSON.parse(localStorage.getItem("user"));
-
+  // Set the company state variable when the user state variable changes
   useEffect(() => {
-    if (decodedUser && decodedUser.company) {
-      setCompany(decodedUser.company);
+    if (user && user.company) {
+      setCompany(user.company);
     }
-  }, [decodedUser]);
+  }, [user]);
 
+  // Handle input changes
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     switch (name) {
@@ -40,6 +48,9 @@ const LostAndFound = () => {
       case "company":
         setCompany(value);
         break;
+      case "station":
+        setStation(value);
+        break;
       case "contact":
         setContact(value);
         break;
@@ -48,10 +59,12 @@ const LostAndFound = () => {
     }
   };
 
+  // Handle image changes
   const handleImageChange = (event) => {
     setSelectedImages(Array.from(event.target.files)); // Convert FileList to an array
   };
 
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -77,6 +90,7 @@ const LostAndFound = () => {
     const dataObject = {
       description: description,
       company: company,
+      station: station,
       contact: contact,
       images: imageUrls, // Assuming imageUrls is an array of image URLs
     };
@@ -90,7 +104,12 @@ const LostAndFound = () => {
           "Content-Type": "application/json",
         },
       });
+      // Display success message
+      message.success("Lost item has been successfully posted");
       console.log("Data sent successfully!");
+
+      // Reload the page
+      window.location.reload();
     } catch (error) {
       console.error("Error sending data:", error);
     }
@@ -99,16 +118,16 @@ const LostAndFound = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="description">Description:</label>
         <input
           type="text"
           id="description"
           name="description"
+          placeholder="Description"
           value={description}
           onChange={handleInputChange}
           required
         />
-        <label htmlFor="company">Company:</label>
+        <br />
         <input
           type="text"
           id="company"
@@ -116,17 +135,30 @@ const LostAndFound = () => {
           value={company}
           onChange={handleInputChange}
           required
+          disabled // Disable the company input field since it's already set
         />
-        <label htmlFor="contact">Contact:</label>
+        <br />
+        <input
+          type="text"
+          id="station"
+          name="station"
+          placeholder="Station"
+          value={station}
+          onChange={handleInputChange}
+          required
+        />
+        <br />
         <input
           type="text"
           id="contact"
           name="contact"
+          placeholder="Contact"
           value={contact}
           onChange={handleInputChange}
           required
         />
-        <label htmlFor="images">Images (Optional):</label>
+        <br />
+        <label htmlFor="images">Images:</label>
         <input
           type="file"
           id="images"
@@ -134,7 +166,10 @@ const LostAndFound = () => {
           multiple
           onChange={handleImageChange}
         />
-        <button type="submit">Submit Lost Item</button>
+        <br />
+        <button className="btn btn-primary" type="submit">
+          Submit Lost Item
+        </button>
       </form>
       <LostsCrud />
     </>

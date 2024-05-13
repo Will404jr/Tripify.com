@@ -44,14 +44,26 @@ const Login = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Check account type
+        // Check account type and company name
         switch (user.accountType) {
           case "admin":
-            // Check if it's the user's first login
-            if (user.firstLogin) {
-              navigate("/register");
+            if (user.company) {
+              // Fetch bus details
+              const busResponse = await fetch(
+                "http://localhost:5000/api/buses"
+              );
+              const busData = await busResponse.json();
+              // Check if the admin's company matches any bus company name
+              const companyExists = busData.some(
+                (bus) => bus.company === user.company
+              );
+              if (!companyExists) {
+                navigate("/register");
+              } else {
+                navigate("/admin");
+              }
             } else {
-              navigate("/admin");
+              navigate("/register");
             }
             break;
           case "user":

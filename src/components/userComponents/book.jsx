@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import PrevostX345SeatLayout from "./BusSeat/seat";
+import { message } from "antd";
+
+import "./book.css";
 
 const Book = () => {
   const [buses, setBuses] = useState([]);
@@ -120,47 +123,50 @@ const Book = () => {
       }
 
       setSubmitted(true);
+
+      // Display success message
+      message.success("Ticket successfully booked");
     } catch (error) {
       console.error("Error creating booking:", error);
     }
   };
 
   return (
-    <div className="container mt-5">
+    <div className="card">
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
+        <div>
           <input
             type="text"
-            className="form-control"
+            className="input"
             name="name"
             placeholder="Name"
             onChange={handleChange}
             required
           />
         </div>
-        <div className="mb-3">
+        <div>
           <input
             type="text"
-            className="form-control"
+            className="input"
             name="email"
             placeholder="Email"
             onChange={handleChange}
             required
           />
         </div>
-        <div className="mb-3">
+        <div>
           <input
             type="tel"
-            className="form-control"
+            className="input"
             name="phoneNumber"
             placeholder="Phone Number"
             onChange={handleChange}
             required
           />
         </div>
-        <div className="mb-3">
+        <div>
           <select
-            className="form-select"
+            className="select"
             name="destination"
             onChange={handleChange}
             required
@@ -177,9 +183,9 @@ const Book = () => {
             )}
           </select>
         </div>
-        <div className="mb-3">
+        <div>
           <select
-            className="form-select"
+            className="select"
             name="busCompany"
             value={formData.busCompany}
             onChange={handleChange}
@@ -193,9 +199,9 @@ const Book = () => {
             ))}
           </select>
         </div>
-        <div className="mb-3">
+        <div>
           <select
-            className="form-select"
+            className="select"
             name="station"
             onChange={handleChange}
             required
@@ -210,18 +216,18 @@ const Book = () => {
               ))}
           </select>
         </div>
-        <div className="mb-3">
+        <div>
           <input
             type="date"
-            className="form-control"
+            className="input"
             name="date"
             onChange={handleChange}
             required
           />
         </div>
-        <div className="mb-3">
+        <div>
           <select
-            className="form-select"
+            className="select"
             name="schedule"
             onChange={handleChange}
             required
@@ -245,9 +251,9 @@ const Book = () => {
         </button> */}
       </form>
       {submitted && (
-        <div className="mt-3">
-          <p>Ticket Price: ${ticketPrice}</p>
-          <button className="btn btn-primary" onClick={handleProceedToPayment}>
+        <div>
+          <p>Ticket Price: shs. {ticketPrice}</p>
+          <button className="button" onClick={handleProceedToPayment}>
             Proceed to Payment
           </button>
         </div>

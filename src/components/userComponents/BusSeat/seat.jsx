@@ -22,11 +22,19 @@ const PrevostX345SeatLayout = ({ selectedSeat, handleChange }) => {
       row.push(
         <td key={`${i}-${j}`} style={{ padding: "5px" }}>
           <button
-            className={`btn btn-outline-secondary seat ${
-              isSeatSelected(seatNumber) ? "selected" : ""
-            }`}
+            className="seat-button"
+            style={{
+              width: "40px",
+              height: "40px",
+              fontSize: "12px",
+              border: "1px solid #ccc",
+              background: isSeatSelected(seatNumber)
+                ? "#007bff"
+                : "transparent",
+              color: isSeatSelected(seatNumber) ? "#fff" : "#000",
+              borderRadius: "5px",
+            }}
             onClick={() => handleSeatClick(seatNumber)}
-            style={{ width: "40px", height: "40px", fontSize: "12px" }}
           >
             {seatNumber}
           </button>
@@ -41,15 +49,15 @@ const PrevostX345SeatLayout = ({ selectedSeat, handleChange }) => {
   }
 
   return (
-    <div className="container mt-4">
-      <table className="table table-borderless table-sm prevost-x345-seat-layout">
-        <thead className="table-dark">
+    <div className="card" style={{ height: "30%", width: "30%" }}>
+      <table className="prevost-x345-seat-layout">
+        <thead>
           <tr>
             <th colSpan={seatColumns}>Bus Front</th>
           </tr>
         </thead>
         <tbody>{seatLayout}</tbody>
-        <tfoot className="table-dark">
+        <tfoot>
           <tr>
             <td colSpan={seatColumns}>Bus Rear</td>
           </tr>

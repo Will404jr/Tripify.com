@@ -23,26 +23,28 @@ const LostsCrud = () => {
   }, [navigate]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
+    if (user && user.company) {
+      const fetchData = async () => {
+        setIsLoading(true);
+        setError(null);
 
-      try {
-        const response = await axios.get("http://localhost:5000/api/lost");
-        // Filter lost items based on company name in decoded JWT token
-        const filteredItems = response.data.filter(
-          (item) => item.company === user.company
-        );
-        setLostItems(filteredItems);
-      } catch (error) {
-        console.error("Error fetching lost items:", error);
-        setError(error.message || "An error occurred while fetching data.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        try {
+          const response = await axios.get("http://localhost:5000/api/lost");
+          // Filter lost items based on company name in decoded JWT token
+          const filteredItems = response.data.filter(
+            (item) => item.company === user.company
+          );
+          setLostItems(filteredItems);
+        } catch (error) {
+          console.error("Error fetching lost items:");
+          setError(error.message || "An error occurred while fetching data.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [user]);
 
   const handleDelete = async (id) => {
@@ -85,8 +87,19 @@ const LostsCrud = () => {
             <div
               className="delete-icon"
               onClick={() => handleDelete(lostItem._id)}
+              style={{
+                padding: "5px",
+                backgroundColor: "#dc3545",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                width: "40%",
+              }}
             >
-              <DeleteOutlined />
+              <p>
+                <DeleteOutlined /> Delete
+              </p>
             </div>
           </div>
         ))}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { message } from "antd";
 
 const Package = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +18,8 @@ const Package = () => {
   const [filteredBuses, setFilteredBuses] = useState([]);
   const [stations, setStations] = useState([]);
   const [schedules, setSchedules] = useState([]);
-  const [courierPrice, setCourierPrice] = useState(0);
+  const [courrierPrice, setCourrierPrice] = useState(0);
+  const [selectedStations, setSelectedStations] = useState([]);
 
   useEffect(() => {
     const fetchBuses = async () => {
@@ -46,38 +48,40 @@ const Package = () => {
     }
   }, [formData.destination, buses]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
     if (name === "chosenBus") {
       const selectedBus = buses.find((bus) => bus.company === value);
       if (selectedBus) {
-        const courierPrice = selectedBus.courrierPrice;
-        setCourierPrice(courierPrice);
+        const stationsArray = selectedBus.stations.map(
+          (station) => station.stationName
+        );
+        setSelectedStations(stationsArray);
+        setSchedules(selectedBus.schedules); // Update schedules based on selected bus
+        setCourrierPrice(selectedBus.courrierPrice); // Update courier price based on selected bus
       }
     }
-  };
 
-  const fetchStationsAndSchedules = async () => {
-    const selectedBus = filteredBuses.find(
-      (bus) => bus.company === formData.chosenBus
-    );
-    if (selectedBus) {
-      const selectedStation = selectedBus.stations.find((station) =>
-        station.destinations.some((dest) => dest.name === formData.destination)
+    if (name === "destination") {
+      const selectedDestinationBuses = buses.filter((bus) =>
+        bus.stations.some((station) =>
+          station.destinations.some((dest) => dest.name === value)
+        )
       );
-      if (selectedStation) {
-        setStations(selectedStation.destinations.map((dest) => dest.name));
-        setSchedules(selectedBus.schedules);
+      setFilteredBuses(selectedDestinationBuses);
+
+      if (formData.chosenBus) {
+        const selectedBus = selectedDestinationBuses.find(
+          (bus) => bus.company === formData.chosenBus
+        );
+        if (selectedBus) {
+          setCourrierPrice(selectedBus.courrierPrice);
+        }
       }
     }
   };
-
-  useEffect(() => {
-    if (formData.chosenBus && formData.destination) {
-      fetchStationsAndSchedules();
-    }
-  }, [formData.chosenBus, formData.destination]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,6 +104,7 @@ const Package = () => {
           recipientsNumber: formData.recipientNumber,
           destination: formData.destination,
           chosenBus: formData.chosenBus,
+          station: formData.station,
           shippingDate: formData.date,
           shippingTime: formData.schedule,
         }),
@@ -108,7 +113,7 @@ const Package = () => {
       if (!response.ok) {
         throw new Error("Failed to submit package");
       }
-
+      message.success("Package ticket successfully booked");
       console.log("Package submitted successfully");
 
       // Send email after successful submission
@@ -288,7 +293,7 @@ const Package = () => {
             required
           >
             <option value="">Select Station</option>
-            {stations.map((station, index) => (
+            {selectedStations.map((station, index) => (
               <option key={index} value={station}>
                 {station}
               </option>
@@ -335,9 +340,9 @@ const Package = () => {
           <input
             type="text"
             className="form-control"
-            id="courierPrice"
-            name="courierPrice"
-            value={`$${courierPrice}`}
+            id="courrierPrice"
+            name="courrierPrice"
+            value={`shs. ${courrierPrice}`}
             readOnly
           />
         </div>

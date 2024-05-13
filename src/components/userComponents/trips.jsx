@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { Card } from "antd";
-import "./trips.css"; // Import a custom CSS file for additional styling
+import "./trips.css"; // Import external CSS file for additional styling
 
 const Trips = () => {
   const [bookings, setBookings] = useState([]);
@@ -47,40 +46,40 @@ const Trips = () => {
   }, [decodedUser, bookings]);
 
   return (
-    <div className="container">
-      <div className="card-container">
+    <div className="cont">
+      <div className="card-cont">
         {filteredBookings.map((booking, index) => (
-          <Card key={index} className="booking-card">
-            <p>
+          <div key={index} className="booking-card">
+            <p className="booking-info">
               <strong>Ticket ID:</strong> {booking.bookingID}
             </p>
-            <p>
+            <p className="booking-info">
               <strong>To:</strong> {booking.destination}
             </p>
-            <p>
+            <p className="booking-info">
               <strong>Chosen Bus:</strong> {booking.chosenBus}
             </p>
-            <p>
+            <p className="booking-info">
               <strong>Station:</strong> {booking.station}
             </p>
-            <p>
+            <p className="booking-info">
               <strong>Travel Date:</strong>{" "}
               {new Date(booking.selectedDate).toLocaleDateString()}
             </p>
-            <p>
+            <p className="booking-info">
               <strong>Departure Time:</strong> {booking.shippingTime}
             </p>
-            <p>
+            <p className="booking-info">
               <strong>Occupied Seat:</strong> {booking.selectedSeat}
             </p>
             <button
-              className={`btn ${
-                booking.cleared ? "btn-secondary" : "btn-danger"
+              className={`booking-button ${
+                booking.cleared ? "cleared" : "uncleared"
               }`}
             >
               {booking.cleared ? "Cleared" : "Uncleared"}
             </button>
-          </Card>
+          </div>
         ))}
       </div>
     </div>

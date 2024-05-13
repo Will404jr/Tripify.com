@@ -42,24 +42,39 @@ const AdminsComponent = () => {
       )}{" "}
       {/* Render RegisterAdmin component conditionally */}
       {/* <h2>Admins</h2> */}
-      <table className="table table-responsive">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Password</th>
-          </tr>
-        </thead>
-        <tbody>
-          {admins.map((admin) => (
-            <tr key={admin._id}>
-              <td>{admin.email}</td>
-              <td>{admin.password}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {admins.map((admin) => (
+          <div key={admin._id} style={cardStyle}>
+            <div>
+              {/* Placeholder image */}
+              <img
+                src={require("../images/admin.jpg")}
+                alt="Admin"
+                style={{ width: "100%" }}
+              />
+            </div>
+            <div>
+              <p>
+                <strong>Email:</strong> {admin.email}
+              </p>
+              <p>
+                <strong>Company:</strong> {admin.company}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
+};
+
+// Inline CSS styles for the card
+const cardStyle = {
+  border: "1px solid #ccc",
+  borderRadius: "5px",
+  padding: "10px",
+  margin: "10px",
+  width: "250px",
 };
 
 export default AdminsComponent;

@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from "./BusCompanyDetails.module.css";
+import styles from "./busDisplay.module.css";
+import { Button } from "antd"; // Import Button from Ant Design
 
 const BusCompanyDetails = ({ busCompanyName }) => {
   const [busCompanyData, setBusCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const decodedUser = jwtDecode(jwt);
+      setUser(decodedUser);
+    } else {
+      navigate("/auth"); // Redirect to login if token not found
+    }
+  }, [navigate]);
+
+  // Assuming you have access to the decoded user object
+  const decodedUser = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchBusCompanyData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/bus/name/${busCompanyName}`
+          `http://localhost:5000/api/bus/name/${decodedUser.company}`
         );
         setBusCompanyData(response.data);
         setLoading(false);
@@ -22,6 +40,10 @@ const BusCompanyDetails = ({ busCompanyName }) => {
 
     fetchBusCompanyData();
   }, [busCompanyName]);
+
+  const handleEditClick = () => {
+    navigate(`/edit-bus/${busCompanyData._id}`); // Navigate to the edit page with the bus ID
+  };
 
   return (
     <div className={styles.card}>
@@ -81,6 +103,10 @@ const BusCompanyDetails = ({ busCompanyName }) => {
               </div>
             ))}
           </div>
+
+          <Button type="primary" onClick={handleEditClick}>
+            Edit Bus Details
+          </Button>
         </div>
       ) : (
         <p className={styles.noData}>No data found for this bus company.</p>

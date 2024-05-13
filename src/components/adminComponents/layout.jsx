@@ -19,6 +19,7 @@ import LostAndFound from "./lostAndFound";
 import Booking from "./bookings";
 import Finance from "./finance";
 import TravelForm from "./RegisterForm";
+import BusCompanyDetails from "./BusDisplay/busDisplay";
 
 const { Header, Content, Sider } = Layout;
 
@@ -156,7 +157,7 @@ const Content2 = () => {
         <Route path="bookings" element={<Booking />} />
         <Route path="packages" element={<Packages />} />
         <Route path="finance" element={<Finance />} />
-        <Route path="edit" element={<TravelForm />} />
+        <Route path="edit" element={<BusCompanyDetails />} />
         <Route path="lost" element={<LostAndFound />} />
       </Routes>
     </div>

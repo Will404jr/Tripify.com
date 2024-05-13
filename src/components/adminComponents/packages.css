@@ -1,0 +1,26 @@
+/* styles.css */
+.card {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.ptable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ptable th,
+.ptable td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.ptable th {
+  background-color: #f2f2f2;
+}
+
+.ptable-responsive {
+  overflow-x: auto;
+}

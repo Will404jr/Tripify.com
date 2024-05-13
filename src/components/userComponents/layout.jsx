@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Link } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import {
   HomeOutlined,
@@ -66,7 +72,7 @@ const items = [
 const UserDisplay = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [selectedKey, setSelectedKey] = useState("/");
+  const location = useLocation();
   const isLoggedIn = !!user; // Check if user is logged in
 
   useEffect(() => {
@@ -77,12 +83,7 @@ const UserDisplay = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setSelectedKey(window.location.pathname); // Set selected key based on current path
-  }, []);
-
   const handleClick = ({ key }) => {
-    setSelectedKey(key);
     if (key === "logout") {
       localStorage.removeItem("token"); // Remove token from localStorage
       window.location.reload(); // Refresh the page
@@ -98,8 +99,7 @@ const UserDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["home"]}
-          selectedKeys={[selectedKey]}
+          selectedKeys={[location.pathname.substr(1)]} // Set selected key based on current location pathname
           onClick={handleClick}
         >
           {items.map((item) =>
@@ -121,7 +121,7 @@ const UserDisplay = () => {
             alignItems: "center",
           }}
         >
-          <h6>{findLabelByKey(selectedKey)}</h6>
+          <h6>{findLabelByKey(location.pathname.substr(1))}</h6>
           <div style={{ display: "flex" }}>
             {isLoggedIn ? (
               // Display user's email if logged in
