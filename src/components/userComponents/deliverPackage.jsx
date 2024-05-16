@@ -24,7 +24,7 @@ const Package = () => {
   useEffect(() => {
     const fetchBuses = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/buses");
+        const response = await fetch(process.env.REACT_APP_API_URL + "/buses");
         const data = await response.json();
         setBuses(data);
       } catch (error) {
@@ -90,25 +90,28 @@ const Package = () => {
       // Generate a unique packageID
       const packageID = generateShortPackageID();
 
-      const response = await fetch("http://localhost:5000/api/packages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          packageID: packageID, // Include the generated packageID
-          fullNames: formData.fullName,
-          email: formData.email,
-          tellNumber: formData.phoneNumber,
-          recipientsNames: formData.recipientName,
-          recipientsNumber: formData.recipientNumber,
-          destination: formData.destination,
-          chosenBus: formData.chosenBus,
-          station: formData.station,
-          shippingDate: formData.date,
-          shippingTime: formData.schedule,
-        }),
-      });
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + "/packages",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            packageID: packageID, // Include the generated packageID
+            fullNames: formData.fullName,
+            email: formData.email,
+            tellNumber: formData.phoneNumber,
+            recipientsNames: formData.recipientName,
+            recipientsNumber: formData.recipientNumber,
+            destination: formData.destination,
+            chosenBus: formData.chosenBus,
+            station: formData.station,
+            shippingDate: formData.date,
+            shippingTime: formData.schedule,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit package");
@@ -118,7 +121,7 @@ const Package = () => {
 
       // Send email after successful submission
       const emailResponse = await fetch(
-        "http://localhost:5000/api/package-email",
+        process.env.REACT_APP_API_URL + "/package-email",
         {
           method: "POST",
           headers: {

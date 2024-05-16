@@ -13,7 +13,9 @@ const LostItems = () => {
       setError(null);
 
       try {
-        const response = await axios.get("http://localhost:5000/api/lost");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/lost"
+        );
         setLostItems(response.data);
       } catch (error) {
         console.error("Error fetching lost items:", error);

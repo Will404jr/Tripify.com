@@ -9,11 +9,14 @@ const AdminsComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/accounts", {
-          params: {
-            accountType: "admin", // Filter by accountType 'admin'
-          },
-        });
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/accounts",
+          {
+            params: {
+              accountType: "admin", // Filter by accountType 'admin'
+            },
+          }
+        );
         setAdmins(response.data);
       } catch (error) {
         console.error("Error fetching admins:", error);

@@ -37,7 +37,9 @@ const Booking = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/bookings");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/bookings"
+        );
         setBookings(response.data);
       } catch (error) {
         console.error("Error fetching bookings:", error);
@@ -50,7 +52,9 @@ const Booking = () => {
   useEffect(() => {
     const fetchBusDetails = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/buses");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/buses"
+        );
         setBusDetails(response.data);
       } catch (error) {
         console.error("Error fetching bus details:", error);
@@ -80,6 +84,11 @@ const Booking = () => {
 
   useEffect(() => {
     let filtered = bookings;
+    if (decodedUser && decodedUser.company) {
+      filtered = filtered.filter(
+        (booking) => booking.chosenBus === decodedUser.company
+      );
+    }
     if (stationFilter) {
       filtered = filtered.filter(
         (booking) => booking.station === stationFilter
@@ -109,6 +118,7 @@ const Booking = () => {
     }
     setFilteredBookings(filtered);
   }, [
+    decodedUser,
     stationFilter,
     destinationFilter,
     selectedDateFilter,
@@ -120,10 +130,13 @@ const Booking = () => {
   const handleClearBooking = async (bookingId) => {
     try {
       await axios.patch(
-        `http://localhost:5000/api/bookings/${bookingId}/clear`
+        process.env.REACT_APP_API_URL + "/bookings/${bookingId}/clear"
       );
+
       // Refresh bookings after clearing
-      const response = await axios.get("http://localhost:5000/api/bookings");
+      const response = await axios.get(
+        process.env.REACT_APP_API_URL + "/bookings"
+      );
       setBookings(response.data);
     } catch (error) {
       console.error("Error clearing booking:", error);

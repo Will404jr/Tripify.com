@@ -11,7 +11,9 @@ function OtpConfirmation() {
     // Fetch all OTPs from the database
     const fetchOtps = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/OTP");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/OTP"
+        );
         setOtpList(response.data.otps);
       } catch (error) {
         console.error("Error fetching OTPs:", error);

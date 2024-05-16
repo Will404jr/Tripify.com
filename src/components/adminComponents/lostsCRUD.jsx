@@ -29,7 +29,9 @@ const LostsCrud = () => {
         setError(null);
 
         try {
-          const response = await axios.get("http://localhost:5000/api/lost");
+          const response = await axios.get(
+            process.env.REACT_APP_API_URL + "/lost"
+          );
           // Filter lost items based on company name in decoded JWT token
           const filteredItems = response.data.filter(
             (item) => item.company === user.company
@@ -49,7 +51,8 @@ const LostsCrud = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/lost/${id}`);
+      await axios.delete(process.env.REACT_APP_API_URL + "/lost/${id}");
+
       message.success("Item deleted successfully");
       setLostItems(lostItems.filter((item) => item._id !== id));
     } catch (error) {

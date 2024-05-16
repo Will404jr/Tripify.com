@@ -30,26 +30,14 @@ import LostAndFound from "./Lost and found/lostAndFound";
 const { Header, Content, Sider } = Layout;
 
 const items = [
-  {
-    key: "home",
-    icon: <HomeOutlined />,
-    label: "Home",
-  },
-  {
-    key: "book",
-    icon: <CarOutlined />,
-    label: "Book a trip",
-  },
+  { key: "home", icon: <HomeOutlined />, label: "Home" },
+  { key: "book", icon: <CarOutlined />, label: "Book a trip" },
   {
     key: "package",
     icon: <DeliveredProcedureOutlined />,
     label: "Deliver a package",
   },
-  {
-    key: "schedules",
-    icon: <ScheduleOutlined />,
-    label: "Buses",
-  },
+  { key: "schedules", icon: <ScheduleOutlined />, label: "Buses" },
   {
     key: "lostandFound",
     icon: <InfoCircleOutlined />,
@@ -61,17 +49,13 @@ const items = [
     label: "Manage trips",
     loggedIn: true,
   },
-  {
-    key: "logout", // Add a logout menu item
-    icon: <LogoutOutlined />,
-    label: "Logout",
-    loggedIn: true,
-  },
+  { key: "logout", icon: <LogoutOutlined />, label: "Logout", loggedIn: true },
 ];
 
 const UserDisplay = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [selectedKey, setSelectedKey] = useState(""); // State to track selected menu item
   const location = useLocation();
   const isLoggedIn = !!user; // Check if user is logged in
 
@@ -83,11 +67,23 @@ const UserDisplay = () => {
     }
   }, []);
 
+  useEffect(() => {
+    // Initialize selected key from local storage or default to home
+    const storedKey = localStorage.getItem("selectedKey");
+    setSelectedKey(storedKey || "home");
+  }, []);
+
+  useEffect(() => {
+    // Save selected key to local storage
+    localStorage.setItem("selectedKey", selectedKey);
+  }, [selectedKey]);
+
   const handleClick = ({ key }) => {
     if (key === "logout") {
-      localStorage.removeItem("token"); // Remove token from localStorage
-      window.location.reload(); // Refresh the page
+      localStorage.removeItem("token");
+      window.location.reload();
     } else {
+      setSelectedKey(key); // Update selected key
       navigate(key);
     }
   };
@@ -99,12 +95,12 @@ const UserDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[location.pathname.substr(1)]} // Set selected key based on current location pathname
+          selectedKeys={[selectedKey]}
           onClick={handleClick}
         >
           {items.map((item) =>
             (item.loggedIn && isLoggedIn) || !item.loggedIn ? (
-              <Menu.Item key={item.key} icon={item.icon} onClick={item.onClick}>
+              <Menu.Item key={item.key} icon={item.icon}>
                 {item.label}
               </Menu.Item>
             ) : null
@@ -121,13 +117,11 @@ const UserDisplay = () => {
             alignItems: "center",
           }}
         >
-          <h6>{findLabelByKey(location.pathname.substr(1))}</h6>
+          <h6>{findLabelByKey(selectedKey)}</h6>
           <div style={{ display: "flex" }}>
             {isLoggedIn ? (
-              // Display user's email if logged in
               <h6>{user.email}</h6>
             ) : (
-              // Display login link if not logged in
               <Link to="/auth">
                 <h6>Login/Register</h6>
               </Link>

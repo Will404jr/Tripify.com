@@ -11,9 +11,6 @@ const Home = () => {
         alignItems: "center",
       }}
     >
-      <h1>
-        Welcome to <i>Tripify</i>
-      </h1>
       <img
         src={require("./images/logo.png")}
         alt="bus"

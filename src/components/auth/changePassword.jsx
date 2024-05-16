@@ -32,7 +32,7 @@ function ChangePassword() {
     try {
       // Make API request to change password
       const response = await axios.put(
-        "http://localhost:5000/api/change-password",
+        process.env.REACT_APP_API_URL + "/change-password",
         { email, newPassword }
       );
 

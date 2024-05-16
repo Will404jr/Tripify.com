@@ -118,7 +118,7 @@ const TravelForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/busRegister",
+        process.env.REACT_APP_API_URL + "/busRegister",
         formData
       );
       console.log(response.data); // Handle successful response
@@ -126,7 +126,7 @@ const TravelForm = () => {
 
       // Display success message and navigate to /admin
       message.success("Bus registration successful", () => {
-        navigate("/admin");
+        navigate("/admin/home");
       });
     } catch (error) {
       console.error(error); // Handle error

@@ -33,7 +33,9 @@ const Packages = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/packages");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/packages"
+        );
         setPackages(response.data);
       } catch (error) {
         console.error("Error fetching packages:", error);
@@ -46,7 +48,9 @@ const Packages = () => {
   useEffect(() => {
     const fetchBusDetails = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/buses");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/buses"
+        );
         setBusDetails(response.data);
       } catch (error) {
         console.error("Error fetching bus details:", error);
@@ -103,6 +107,9 @@ const Packages = () => {
 
   useEffect(() => {
     let filtered = packages;
+    if (user && user.company) {
+      filtered = filtered.filter((pkg) => pkg.chosenBus === user.company);
+    }
     if (stationFilter) {
       filtered = filtered.filter((pkg) =>
         pkg.destination.startsWith(`${stationFilter} -`)
@@ -125,6 +132,7 @@ const Packages = () => {
     }
     setFilteredPackages(filtered);
   }, [
+    user,
     stationFilter,
     destinationFilter,
     shippingTimeFilter,
@@ -134,9 +142,14 @@ const Packages = () => {
 
   const handleClearPackage = async (_id) => {
     try {
-      await axios.patch(`http://localhost:5000/api/packages/${_id}/clear`);
+      await axios.patch(
+        process.env.REACT_APP_API_URL + "/packages/${_id}/clear"
+      );
+
       // Fetch packages again after clearing
-      const response = await axios.get("http://localhost:5000/api/packages");
+      const response = await axios.get(
+        process.env.REACT_APP_API_URL + "/packages"
+      );
       setPackages(response.data);
     } catch (error) {
       console.error("Error clearing package:", error);

@@ -7,11 +7,14 @@ const UsersComponent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/accounts", {
-          params: {
-            accountType: "user", // Filter by accountType 'user'
-          },
-        });
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/accounts",
+          {
+            params: {
+              accountType: "user", // Filter by accountType 'user'
+            },
+          }
+        );
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -35,7 +38,7 @@ const UsersComponent = () => {
           {users.map((user) => (
             <tr key={user._id}>
               <td>{user.email}</td>
-              <td>{user.password}</td>
+              <td>*****</td>
             </tr>
           ))}
         </tbody>

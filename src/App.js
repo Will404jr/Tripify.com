@@ -19,15 +19,16 @@ function App() {
     <div>
       {/* <UserDisplay /> */}
       <Routes>
-        <Route path="/*" element={<UserDisplay />} />
-        {/* <Route path="/edit-bus/:id" element={<EditBusDetails />} /> */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthControl />} />
+        <Route path="/user/*" element={<UserDisplay />} />
         <Route path="/sysAdmin/*" element={<SystemAdminDisplay />} />
         <Route path="/admin/*" element={<AdminDisplay />} />
         <Route path="/register" element={<TravelForm />} />
         <Route path="/forgot-password" element={<Otp />} />
         <Route path="/otp-confirmation" element={<OtpConfirmation />} />
         <Route path="/change-password" element={<ChangePassword />} />
+        <Route path="/editBus/:id" element={<EditBusDetails />} />
       </Routes>
     </div>
   );

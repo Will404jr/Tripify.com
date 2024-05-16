@@ -24,7 +24,7 @@ const Book = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/buses");
+        const response = await fetch(process.env.REACT_APP_API_URL + "/buses");
         const data = await response.json();
         setBuses(data);
       } catch (error) {
@@ -91,13 +91,16 @@ const Book = () => {
         selectedSeat: formData.selectedSeat,
       };
 
-      const response = await fetch("http://localhost:5000/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bookingData),
-      });
+      const response = await fetch(
+        process.env.REACT_APP_API_URL + "/bookings",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookingData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to create booking");
@@ -105,7 +108,7 @@ const Book = () => {
 
       // Send email after successful booking
       const emailResponse = await fetch(
-        "http://localhost:5000/api/booking-email",
+        process.env.REACT_APP_API_URL + "/booking-email",
         {
           method: "POST",
           headers: {

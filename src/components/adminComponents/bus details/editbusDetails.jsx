@@ -25,8 +25,9 @@ const EditBusDetails = () => {
     const fetchBusDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/bus/${match.params.id}`
+          `${process.env.REACT_APP_API_URL}/bus/${match.params.id}`
         );
+
         setBusDetails(response.data);
       } catch (error) {
         console.error("Error fetching bus details:", error);
@@ -39,7 +40,7 @@ const EditBusDetails = () => {
   const handleSaveChanges = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/editBus/${match.params.id}`,
+        `${process.env.REACT_APP_API_URL}/editBus/${match.params.id}`,
         busDetails
       );
       message.success("Bus details updated successfully!"); // Display success message

@@ -23,13 +23,18 @@ const Register = () => {
       setFormSubmitted(true); // Set formSubmitted to true on submission
 
       try {
-        const response = await fetch("http://localhost:5000/api/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        });
+        console.log("API URL:", process.env.REACT_APP_API_URL);
+
+        const response = await fetch(
+          process.env.REACT_APP_API_URL + "/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -41,7 +46,7 @@ const Register = () => {
         const data = await response.json();
         toast.success("Registration successful");
         console.log("Registration successful", data);
-        navigate("/user"); // Use navigate to redirect to /user after successful registration
+        navigate("/user/home"); // Use navigate to redirect to /user after successful registration
       } catch (error) {
         // toast.error(error.message || "Error registering user");
         // console.error("Error registering user:", error);

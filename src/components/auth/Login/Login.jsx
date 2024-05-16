@@ -22,7 +22,7 @@ const Login = () => {
       setFormSubmitted(true);
 
       try {
-        const response = await fetch("http://localhost:5000/api/login", {
+        const response = await fetch(process.env.REACT_APP_API_URL + "/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -50,7 +50,7 @@ const Login = () => {
             if (user.company) {
               // Fetch bus details
               const busResponse = await fetch(
-                "http://localhost:5000/api/buses"
+                process.env.REACT_APP_API_URL + "/buses"
               );
               const busData = await busResponse.json();
               // Check if the admin's company matches any bus company name
@@ -60,20 +60,20 @@ const Login = () => {
               if (!companyExists) {
                 navigate("/register");
               } else {
-                navigate("/admin");
+                navigate("/admin/home");
               }
             } else {
               navigate("/register");
             }
             break;
           case "user":
-            navigate("/user");
+            navigate("/user/home");
             break;
           case "sysAdmin":
-            navigate("/sysadmin");
+            navigate("/sysadmin/home");
             break;
           default:
-            navigate("/"); // Default route for unknown account types
+            navigate("/auth"); // Default route for unknown account types
             break;
         }
       } catch (error) {

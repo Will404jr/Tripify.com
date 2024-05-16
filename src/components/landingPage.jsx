@@ -1,22 +1,43 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
 const LandingPage = () => {
   return (
     <div
-      className="hero min-h-screen"
       style={{
-        backgroundImage:
-          "url(https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        position: "relative", // Add position relative to contain the absolute positioned text
       }}
     >
-      <div className="hero-overlay bg-opacity-60"></div>
-      <div className="hero-content text-center text-neutral-content">
-        <div className="max-w-md">
-          <h1 className="mb-5 text-5xl font-bold">Hello there</h1>
-          <p className="mb-5">
-            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-            excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
-            a id nisi.
-          </p>
-          <button className="btn btn-primary">Book a trip</button>
+      {/* Background image */}
+      <img
+        src={require("./images/bus.jpg")}
+        alt="Bus"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover", // Ensure the image covers the entire container
+          filter: "blur(3px)", // Apply blur effect
+          zIndex: -1, // Send the image to the back
+        }}
+      />
+
+      {/* Content */}
+      <div style={{ textAlign: "center", color: "white", zIndex: 1 }}>
+        <h1>Welcome to Tripify.com</h1>
+        <div>
+          <Link to="/user/home">
+            <button style={{ marginRight: "10px" }}>Go to Dashboard</button>
+          </Link>
+          <Link to="/auth">
+            <button>Login</button>
+          </Link>
         </div>
       </div>
     </div>

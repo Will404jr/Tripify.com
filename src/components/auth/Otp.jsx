@@ -12,9 +12,12 @@ function Otp() {
     e.preventDefault();
     try {
       // Send email to the server endpoint
-      const response = await axios.post("http://localhost:5000/api/OTP", {
-        email,
-      });
+      const response = await axios.post(
+        process.env.REACT_APP_API_URL + "/OTP",
+        {
+          email,
+        }
+      );
       // Redirect to OTP confirmation page
       navigate("/otp-confirmation");
     } catch (error) {

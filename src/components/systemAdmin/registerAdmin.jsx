@@ -15,7 +15,7 @@ const RegisterAdmin = () => {
 
   const sendEmail = async () => {
     try {
-      await axios.post("http://localhost:5000/api/send-email", {
+      await axios.post(process.env.REACT_APP_API_URL + "/send-email", {
         email: email,
         password: generatedPassword,
       });
@@ -33,7 +33,7 @@ const RegisterAdmin = () => {
       await sendEmail();
 
       // Send data to register endpoint
-      await axios.post("http://localhost:5000/api/register", {
+      await axios.post(process.env.REACT_APP_API_URL + "/register", {
         email: email,
         company: company,
         password: generatedPassword,

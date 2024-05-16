@@ -99,7 +99,7 @@ const LostAndFound = () => {
 
     // Send the data object to the server
     try {
-      await axios.post("http://localhost:5000/api/lost", dataObject, {
+      await axios.post(process.env.REACT_APP_API_URL + "/lost", dataObject, {
         headers: {
           "Content-Type": "application/json",
         },

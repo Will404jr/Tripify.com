@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   HomeOutlined,
@@ -29,16 +29,6 @@ const items = [
     icon: <UserOutlined />,
     label: "Users",
   },
-  //   {
-  //     key: "/addAdmin",
-  //     icon: <UserAddOutlined />,
-  //     label: "Add admin",
-  //   },
-  //   {
-  //     key: "/lostandFound",
-  //     icon: <InfoCircleOutlined />,
-  //     label: "Lost and found",
-  //   },
   {
     key: "logout",
     icon: <LogoutOutlined />,
@@ -49,7 +39,13 @@ const items = [
 
 const SystemAdminDisplay = () => {
   const navigate = useNavigate();
-  const [selectedKey, setSelectedKey] = React.useState("/");
+  const [selectedKey, setSelectedKey] = React.useState(
+    localStorage.getItem("selectedMenuItem") || "home" // Use localStorage for persistence
+  );
+
+  useEffect(() => {
+    localStorage.setItem("selectedMenuItem", selectedKey); // Update localStorage on change
+  }, [selectedKey]);
 
   const handleClick = ({ key }) => {
     setSelectedKey(key);
@@ -67,7 +63,7 @@ const SystemAdminDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["home"]}
+          defaultSelectedKeys={[selectedKey]}
           onClick={handleClick}
         >
           {items.map((item) => (
@@ -107,8 +103,6 @@ const SystemAdminDisplay = () => {
               <Route path="home" element={<Home />} />
               <Route path="users" element={<UsersComponent />} />
               <Route path="admins" element={<AdminsComponent />} />
-              {/* <Route path="/addAdmin" element={<Buses />} /> */}
-              {/* <Route path="/trips" element={<Trips />} /> */}
             </Routes>
           </div>
         </Content>

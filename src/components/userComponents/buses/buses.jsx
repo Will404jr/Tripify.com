@@ -11,7 +11,9 @@ const Buses = () => {
   useEffect(() => {
     const fetchBuses = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/buses/");
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + "/buses/"
+        );
         setBusData(response.data);
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {

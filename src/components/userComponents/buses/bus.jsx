@@ -10,7 +10,7 @@ const BusCompanyDetails = ({ busCompanyName }) => {
     const fetchBusCompanyData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/bus/name/${busCompanyName}`
+          `${process.env.REACT_APP_API_URL}/bus/name/${busCompanyName}`
         );
         setBusCompanyData(response.data);
         setLoading(false);
@@ -19,7 +19,6 @@ const BusCompanyDetails = ({ busCompanyName }) => {
         setLoading(false);
       }
     };
-
     fetchBusCompanyData();
   }, [busCompanyName]);
 
@@ -50,7 +49,7 @@ const BusCompanyDetails = ({ busCompanyName }) => {
               <strong>Contact:</strong> {busCompanyData.contact}
             </p>
             <p>
-              <strong>Courier Price:</strong> {busCompanyData.courrierPrice}
+              <strong>Courier Price:</strong>shs. {busCompanyData.courrierPrice}
             </p>
             <h4 className={styles.subtitle}>Schedules</h4>
             <ul className={styles.scheduleList}>
@@ -73,7 +72,7 @@ const BusCompanyDetails = ({ busCompanyName }) => {
                     {station.destinations.map((destination, i) => (
                       <tr key={i}>
                         <td>{destination.name}</td>
-                        <td>${destination.price}</td>
+                        <td>shs. {destination.price}</td>
                       </tr>
                     ))}
                   </tbody>

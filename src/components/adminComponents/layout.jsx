@@ -65,7 +65,9 @@ const items = [
 const AdminDisplay = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [selectedKey, setSelectedKey] = React.useState("/");
+  const [selectedKey, setSelectedKey] = useState(
+    localStorage.getItem("selectedMenuItem") || "/" // Use localStorage for persistence
+  );
 
   useEffect(() => {
     const jwt = localStorage.getItem("token");
@@ -73,13 +75,13 @@ const AdminDisplay = () => {
       const decodedUser = jwtDecode(jwt);
       setUser(decodedUser);
     } else {
-      navigate("/login"); // Redirect to login if token not found
+      navigate("/auth"); // Redirect to login if token not found
     }
   }, [navigate]);
 
   useEffect(() => {
-    setSelectedKey(window.location.pathname); // Set selected key based on current path
-  }, []);
+    localStorage.setItem("selectedMenuItem", selectedKey); // Update localStorage on change
+  }, [selectedKey]);
 
   const handleClick = ({ key }) => {
     setSelectedKey(key);
@@ -100,7 +102,7 @@ const AdminDisplay = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["home"]}
+          defaultSelectedKeys={[selectedKey]}
           onClick={handleClick}
         >
           {items.map((item) => (
@@ -123,7 +125,7 @@ const AdminDisplay = () => {
           <h6>{findLabelByKey(selectedKey)}</h6>
           <div style={{ display: "flex" }}>
             <UserOutlined style={{ marginRight: "20px" }} />
-            <h6>{user.email}</h6>
+            <h6>{user.company}</h6>
           </div>
         </Header>
 

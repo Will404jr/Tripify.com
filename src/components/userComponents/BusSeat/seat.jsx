@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./seat.css";
 
 const PrevostX345SeatLayout = ({ selectedSeat, handleChange }) => {
