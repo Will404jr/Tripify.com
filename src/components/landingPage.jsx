@@ -1,18 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "./landingPage.css";
 
 const LandingPage = () => {
   return (
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        position: "relative", // Add position relative to contain the absolute positioned text
+        minHeight: "100vh",
+        position: "relative",
+        padding: "0 20px",
+        textAlign: "center",
       }}
     >
-      {/* Background image */}
       <img
         src={require("./images/bus.jpg")}
         alt="Bus"
@@ -22,21 +25,24 @@ const LandingPage = () => {
           left: 0,
           width: "100%",
           height: "100%",
-          objectFit: "cover", // Ensure the image covers the entire container
-          filter: "blur(3px)", // Apply blur effect
-          zIndex: -1, // Send the image to the back
+          objectFit: "cover",
+          filter: "blur(3px)",
+          zIndex: -1,
         }}
       />
-
-      {/* Content */}
-      <div style={{ textAlign: "center", color: "white", zIndex: 1 }}>
+      <div style={{ color: "white", zIndex: 1 }}>
         <h1>Welcome to Tripify.com</h1>
+        <p style={{ marginBottom: "20px" }}>
+          Discover your next adventure with us!
+        </p>
         <div>
           <Link to="/user/home">
-            <button style={{ marginRight: "10px" }}>Go to Dashboard</button>
+            <button className="custom-button">Go to Dashboard</button>
           </Link>
           <Link to="/auth">
-            <button>Login</button>
+            <button className="custom-button" style={{ marginLeft: "10px" }}>
+              Login
+            </button>
           </Link>
         </div>
       </div>
