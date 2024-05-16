@@ -17,7 +17,7 @@ const LandingPage = () => {
       }}
     >
       <img
-        src={require("./images/bus.jpg")}
+        src={require("./images/bus.png")}
         alt="Bus"
         style={{
           position: "absolute",
